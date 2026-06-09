@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom'
 import { DroneCanvas } from '../components/canvas/DroneCanvas'
 import { Button } from '../components/ui/Button'
-import { Shield, Zap, TrendingUp, MonitorSmartphone, Target, Sprout, Map } from 'lucide-react'
+import { Shield, Zap, TrendingUp, MonitorSmartphone, Target, Sprout, Map, Github } from 'lucide-react'
 
 export function LandingPage() {
   return (
@@ -194,6 +194,27 @@ export function LandingPage() {
             Começar Agora
           </Button>
         </Link>
+      </section>
+
+      {/* About Section */}
+      <section className="border-t border-industrial-border bg-zinc-950/10 py-12 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="font-mono text-[10px] text-industrial-accent tracking-widest uppercase mb-2">
+            FULL-STACK & UI/UX · PROJETO DE ESTUDOS
+          </div>
+          <p className="text-sm text-industrial-fg-secondary max-w-2xl mx-auto mb-5 leading-relaxed">
+            Portfólio demonstrando arquitetura full-stack com React Three Fiber, Fastify, MongoDB e JWT,
+            combinado a um design system industrial criado no Figma com foco em UI/UX.
+          </p>
+          <a
+            href="https://github.com/ImBSilva/drone-configurator"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs text-industrial-accent hover:text-industrial-accent-hover transition-colors font-mono"
+          >
+            <Github size={14} /> github.com/ImBSilva/drone-configurator
+          </a>
+        </div>
       </section>
 
     </div>
