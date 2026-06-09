@@ -9,7 +9,7 @@ export function Footer() {
           {/* Tech Spec section */}
           <div>
             <h3 className="font-mono text-xs font-semibold tracking-wider text-industrial-accent uppercase mb-3 flex items-center gap-1.5">
-              <Cpu size={14} /> DRØNE ENGINE v1.0
+              <Cpu size={14} /> DRØNE ENGINE Beta 0.5
             </h3>
             <p className="text-xs text-industrial-fg-secondary leading-relaxed max-w-sm">
               Plataforma de modelagem 3D e parametrização industrial de drones corporativos de alta performance. Desenvolvido para operações governamentais, mapeamento LiDAR e inteligência aérea avançada.

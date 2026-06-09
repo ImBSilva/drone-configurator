@@ -32,7 +32,7 @@ export function Navbar() {
             DRØ<span className="text-industrial-accent">NE</span>
           </span>
           <span className="hidden rounded-sm bg-industrial-border px-1 py-0.5 font-mono text-[8px] tracking-wider text-industrial-muted sm:inline-block border border-industrial-border-strong/30">
-            v1.0
+            Beta 0.5
           </span>
         </Link>
 
