@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DRØNE — Configurador 3D</title>
+<link rel="stylesheet" href="system.css">
+<style>
+.config-layout{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  min-height:calc(100vh - 49px);
+}
+.viewport{
+  padding:var(--space-lg);
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--border);
+  position:relative;
+}
+.viewport-label{
+  font-family:var(--font-mono);
+  font-size:0.6rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--muted);
+  margin-bottom:var(--space-sm);
+  display:flex;justify-content:space-between;
+}
+.viewport-canvas{
+  flex:1;
+  background:var(--code-bg);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  min-height:350px;
+  position:relative;
+  overflow:hidden;
+}
+.viewport-canvas-inner{
+  text-align:center;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--muted);
+  line-height:1.8;
+}
+.viewport-controls{
+  display:flex;gap:var(--space-sm);margin-top:var(--space-md);
+}
+.viewport-controls button{flex:1}
+.viewport-badge{
+  position:absolute;bottom:var(--space-md);left:var(--space-md);
+  display:flex;gap:var(--space-sm);flex-wrap:wrap;
+}
+
+.panel{
+  padding:var(--space-lg);
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+}
+.panel-header{
+  margin-bottom:var(--space-md);
+  padding-bottom:var(--space-md);
+  border-bottom:1px solid var(--border);
+}
+.panel-header h2{font-size:clamp(1.1rem,2vw,1.5rem);font-weight:700;letter-spacing:-0.02em}
+.panel-header .sub{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);margin-top:var(--space-xs)}
+.build-name-row{
+  display:flex;gap:var(--space-sm);margin-top:var(--space-md);
+}
+.build-name-row input{flex:1}
+
+.part-category{display:none}
+.part-category.active{display:block}
+.part-category-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:var(--space-sm);
+}
+.part-category-header h3{
+  font-family:var(--font-mono);
+  font-size:0.6rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--muted);
+}
+.part-count{font-family:var(--font-mono);font-size:0.6rem;color:var(--muted)}
+.part-option{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:var(--space-xs) var(--space-sm);
+  padding:var(--space-sm) var(--space-md);
+  border:1px solid var(--border);
+  margin-bottom:var(--space-sm);
+  cursor:pointer;
+  transition:var(--transition);
+}
+.part-option:hover{border-color:var(--accent-muted)}
+.part-option.selected{
+  border-color:var(--accent);
+  border-width:1px;
+}
+.part-option .name{font-size:0.8rem;font-weight:500}
+.part-option .detail{font-size:0.65rem;color:var(--muted);font-family:var(--font-mono);grid-column:1}
+.part-option .price{font-family:var(--font-mono);font-size:0.8rem;grid-row:1/3;align-self:center;color:var(--fg-secondary);text-align:right}
+.part-option.selected .price{color:var(--accent);font-weight:600}
+.part-option.selected .name{color:var(--accent)}
+
+.price-summary{margin-top:auto;border-top:1px solid var(--border);padding-top:var(--space-lg)}
+.price-row{display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:var(--space-xs)}
+.price-row .label{color:var(--fg-secondary)}
+.price-row .val{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.price-row.total{
+  font-size:1.1rem;font-weight:700;
+  border-top:1px solid var(--border);
+  padding-top:var(--space-md);
+  margin-top:var(--space-sm);
+}
+.price-row.total .val{color:var(--accent)}
+
+.config-actions{
+  display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm);
+  margin-top:var(--space-lg);
+}
+.config-actions .btn-full{grid-column:1/-1}
+
+/* Color swatches */
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:var(--space-sm)}
+.color-swatch{
+  text-align:center;cursor:pointer;
+  padding:var(--space-sm);
+  border:1px solid var(--border);
+  transition:var(--transition);
+}
+.color-swatch:hover{border-color:var(--accent-muted)}
+.color-swatch.selected{border-color:var(--accent)}
+.color-swatch .circle{
+  width:28px;height:28px;border-radius:50%;
+  margin:0 auto var(--space-xs);
+  border:1px solid var(--border);
+}
+.color-swatch .cname{font-size:0.6rem;color:var(--muted);font-family:var(--font-mono)}
+
+@media(max-width:768px){
+  .config-layout{grid-template-columns:1fr}
+  .viewport{border-right:0;border-bottom:1px solid var(--border);min-height:50vh}
+  .panel{overflow-y:visible}
+  .price-summary{margin-top:var(--space-xl)}
+  .config-actions{grid-template-columns:1fr}
+  .config-actions .btn-full{grid-column:1}
+}
+@media(max-width:430px){
+  .viewport{padding:var(--space-md)}
+  .panel{padding:var(--space-md)}
+}
+</style>
+</head>
+<body>
+
+<!-- Pre-loader -->
+<div class="preloader" id="preloader">
+  <div class="preloader-logo">DRØ<span style="color:var(--accent)">NE</span></div>
+  <div class="preloader-bar">
+    <div class="preloader-bar-fill" id="loaderFill"></div>
+  </div>
+  <div class="preloader-status" id="loaderStatus">CARREGANDO MÓDULOS ... 0%</div>
+  <div class="preloader-fact" id="loaderFact">Drones podem carregar cargas úteis de até 70% do seu próprio peso.</div>
+  <div style="display:none" id="factBank">
+    <span>O primeiro drone entregou uma pizza na Nova Zelândia em 2016.</span>
+    <span>Drones agrícolas podem pulverizar até 40 hectares por hora.</span>
+    <span>A autonomia média de um drone enterprise é de 25–55 minutos.</span>
+    <span>LiDAR de drone mapeia o solo com precisão de 2 cm.</span>
+    <span>Drones de vigilância voam a até 500 metros de altitude.</span>
+    <span>O mercado global de drones deve ultrapassar US$ 50 bilhões em 2030.</span>
+    <span>Drones com câmera térmica detectam variações de 0,05°C.</span>
+    <span>Sensores NDVI em drones identificam estresse hídrico em plantas.</span>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">DRØ<span style="color:var(--accent)">NE</span></a>
+  <ul class="nav-links">
+    <li><a href="landing.html">Início</a></li>
+    <li><a href="catalog.html">Catálogo</a></li>
+    <li><a href="configurator.html" class="active">Configurador</a></li>
+    <li><a href="dashboard.html">Minha Frota</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:var(--space-md)">
+    <a href="login.html" class="btn btn-sm btn-ghost" style="font-family:var(--font-mono);font-size:0.7rem">Entrar</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">[dark]</button>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">Menu</button>
+  </div>
+</nav>
+
+<div class="perf-bar" id="perfBar">
+  <div class="perf-metric">
+    <div class="label">Peso Total</div>
+    <div class="value" id="perfWeight">2.4 kg</div>
+    <div class="sub">carga máxima 3.2 kg</div>
+  </div>
+  <div class="perf-metric">
+    <div class="label">Autonomia</div>
+    <div class="value" id="perfFlight">25 min</div>
+    <div class="sub">com 6S 5200mAh</div>
+  </div>
+  <div class="perf-metric">
+    <div class="label">Custo Total</div>
+    <div class="value accent" id="perfCost">$576</div>
+    <div class="sub">peças + montagem</div>
+  </div>
+</div>
+
+<div class="config-layout">
+
+  <div class="viewport">
+    <div class="viewport-label">
+      <span>Visualizador 3D</span>
+      <span id="activePartsCount" style="color:var(--accent)">5 componentes</span>
+    </div>
+    <div class="viewport-canvas" id="viewport3d">
+      <div class="viewport-canvas-inner">
+        <div style="font-size:clamp(1.2rem,2.5vw,2rem);font-weight:700;color:var(--fg-secondary)">Viewport 3D</div>
+        <div style="margin-top:var(--space-sm)">Three.js — <span id="previewPart">X8 Carbon</span></div>
+        <div style="margin-top:var(--space-xs);color:var(--fg-secondary)">Rotacione · Zoom · Arraste</div>
+      </div>
+      <div class="viewport-badge">
+        <span class="badge badge-neutral" id="vpFrame">Estrutura ✓</span>
+        <span class="badge badge-neutral" id="vpMotor">Motor ✓</span>
+        <span class="badge badge-neutral" id="vpBattery">Bateria ✓</span>
+        <span class="badge badge-neutral" id="vpCamera">Câmera ✓</span>
+        <span class="badge badge-neutral" id="vpProps">Hélices ✓</span>
+      </div>
+    </div>
+    <div class="viewport-controls">
+      <button class="btn btn-sm" onclick="animViewport('rotate')">Rotacionar</button>
+      <button class="btn btn-sm" onclick="animViewport('reset')">Centralizar</button>
+      <button class="btn btn-sm" onclick="animViewport('wireframe')">Wireframe</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Monte seu Drone</h2>
+      <div class="sub" id="buildType">Drone de vigilância</div>
+      <div class="build-name-row">
+        <input type="text" class="input" id="buildNameInput" placeholder="Nome do projeto" value="Vigilante X8">
+        <button class="btn btn-sm" onclick="setName()">OK</button>
+      </div>
+    </div>
+
+    <div class="tabs" id="configTabs">
+      <button class="tab active" data-tab="estrutura" onclick="switchTab('estrutura')">Estrutura</button>
+      <button class="tab" data-tab="missao" onclick="switchTab('missao')">Missão</button>
+      <button class="tab" data-tab="propulsao" onclick="switchTab('propulsao')">Propulsão</button>
+      <button class="tab" data-tab="cores" onclick="switchTab('cores')">Cores</button>
+    </div>
+
+    <!-- Tab: Estrutura -->
+    <div class="part-category active" id="tab-estrutura">
+      <div class="part-category-header"><h3>Estrutura / Chassis</h3><span class="part-count">4 opções</span></div>
+      <div class="part-option selected" data-part="frame" data-price="199" data-weight="220" onclick="selectPart(this,'frame')">
+        <div class="name">X8 Carbon</div>
+        <div class="detail">220g · braços de 5mm</div>
+        <div class="price">$199</div>
+      </div>
+      <div class="part-option" data-part="frame" data-price="249" data-weight="195" onclick="selectPart(this,'frame')">
+        <div class="name">X8 Carbon Pro</div>
+        <div class="detail">195g · braços de 6mm</div>
+        <div class="price">$249</div>
+      </div>
+      <div class="part-option" data-part="frame" data-price="149" data-weight="80" onclick="selectPart(this,'frame')">
+        <div class="name">Nano Carbon</div>
+        <div class="detail">80g · braços de 3mm</div>
+        <div class="price">$149</div>
+      </div>
+      <div class="part-option" data-part="frame" data-price="179" data-weight="140" onclick="selectPart(this,'frame')">
+        <div class="name">Race X5</div>
+        <div class="detail">140g · braços de 4mm</div>
+        <div class="price">$179</div>
+      </div>
+    </div>
+
+    <!-- Tab: Missão -->
+    <div class="part-category" id="tab-missao">
+      <div class="part-category-header"><h3>Bateria</h3><span class="part-count">4 opções</span></div>
+      <div class="part-option selected" data-part="battery" data-price="89" data-weight="380" data-flight="25" onclick="selectPart(this,'battery')">
+        <div class="name">6S 5200mAh</div>
+        <div class="detail">380g · ~25 min voo</div>
+        <div class="price">$89</div>
+      </div>
+      <div class="part-option" data-part="battery" data-price="69" data-weight="320" data-flight="20" onclick="selectPart(this,'battery')">
+        <div class="name">6S 4200mAh</div>
+        <div class="detail">320g · ~20 min voo</div>
+        <div class="price">$69</div>
+      </div>
+      <div class="part-option" data-part="battery" data-price="49" data-weight="190" data-flight="12" onclick="selectPart(this,'battery')">
+        <div class="name">4S 2200mAh</div>
+        <div class="detail">190g · ~12 min voo</div>
+        <div class="price">$49</div>
+      </div>
+      <div class="part-option" data-part="battery" data-price="39" data-weight="160" data-flight="9" onclick="selectPart(this,'battery')">
+        <div class="name">4S 1800mAh</div>
+        <div class="detail">160g · ~9 min voo</div>
+        <div class="price">$39</div>
+      </div>
+
+      <hr style="margin:var(--space-lg) 0">
+
+      <div class="part-category-header"><h3>Câmera / Payload</h3><span class="part-count">4 opções</span></div>
+      <div class="part-option selected" data-part="camera" data-price="149" data-weight="85" onclick="selectPart(this,'camera')">
+        <div class="name">4K 60fps</div>
+        <div class="detail">Sensor 1/1.7" · estabilizado</div>
+        <div class="price">$149</div>
+      </div>
+      <div class="part-option" data-part="camera" data-price="399" data-weight="140" onclick="selectPart(this,'camera')">
+        <div class="name">6K Cinema</div>
+        <div class="detail">Sensor S35 · 10-bit</div>
+        <div class="price">$399</div>
+      </div>
+      <div class="part-option" data-part="camera" data-price="79" data-weight="45" onclick="selectPart(this,'camera')">
+        <div class="name">1080p 120fps</div>
+        <div class="detail">Sensor 1/3" · leve</div>
+        <div class="price">$79</div>
+      </div>
+      <div class="part-option" data-part="camera" data-price="549" data-weight="210" onclick="selectPart(this,'camera')">
+        <div class="name">Térmica + 4K</div>
+        <div class="detail">FLIR core · câmera dupla</div>
+        <div class="price">$549</div>
+      </div>
+    </div>
+
+    <!-- Tab: Propulsão -->
+    <div class="part-category" id="tab-propulsao">
+      <div class="part-category-header"><h3>Motores (×4)</h3><span class="part-count">4 opções</span></div>
+      <div class="part-option selected" data-part="motor" data-price="120" data-weight="128" onclick="selectPart(this,'motor')">
+        <div class="name">R-Link 2207</div>
+        <div class="detail">1850KV · 32g cada</div>
+        <div class="price">$120</div>
+      </div>
+      <div class="part-option" data-part="motor" data-price="160" data-weight="144" onclick="selectPart(this,'motor')">
+        <div class="name">Pro 2208</div>
+        <div class="detail">1750KV · 36g cada</div>
+        <div class="price">$160</div>
+      </div>
+      <div class="part-option" data-part="motor" data-price="80" data-weight="120" onclick="selectPart(this,'motor')">
+        <div class="name">Sprint 2306</div>
+        <div class="detail">2450KV · 30g cada</div>
+        <div class="price">$80</div>
+      </div>
+      <div class="part-option" data-part="motor" data-price="90" data-weight="160" onclick="selectPart(this,'motor')">
+        <div class="name">Cruise 2806</div>
+        <div class="detail">1350KV · 40g cada</div>
+        <div class="price">$90</div>
+      </div>
+
+      <hr style="margin:var(--space-lg) 0">
+
+      <div class="part-category-header"><h3>Hélices</h3><span class="part-count">4 opções</span></div>
+      <div class="part-option selected" data-part="props" data-price="19" data-weight="28" onclick="selectPart(this,'props')">
+        <div class="name">5" Freestyle</div>
+        <div class="detail">Policarbonato · 4 unidades</div>
+        <div class="price">$19</div>
+      </div>
+      <div class="part-option" data-part="props" data-price="29" data-weight="36" onclick="selectPart(this,'props')">
+        <div class="name">7" Endurance</div>
+        <div class="detail">Fibra de carbono · 4 unid.</div>
+        <div class="price">$29</div>
+      </div>
+      <div class="part-option" data-part="props" data-price="24" data-weight="32" onclick="selectPart(this,'props')">
+        <div class="name">Dobráveis</div>
+        <div class="detail">Quick-fold · 4 unidades</div>
+        <div class="price">$24</div>
+      </div>
+      <div class="part-option" data-part="props" data-price="15" data-weight="20" onclick="selectPart(this,'props')">
+        <div class="name">3" Racing</div>
+        <div class="detail">Ultra-leves · 4 unidades</div>
+        <div class="price">$15</div>
+      </div>
+    </div>
+
+    <!-- Tab: Cores -->
+    <div class="part-category" id="tab-cores">
+      <div class="part-category-header"><h3>Cor da Estrutura</h3></div>
+      <div class="color-grid" id="colorFrame">
+        <div class="color-swatch selected" data-color="carbon" onclick="selectColor(this,'frame')">
+          <div class="circle" style="background:#2a2a2a"></div>
+          <div class="cname">Carbon</div>
+        </div>
+        <div class="color-swatch" data-color="white" onclick="selectColor(this,'frame')">
+          <div class="circle" style="background:#e8e8e8"></div>
+          <div class="cname">Branco</div>
+        </div>
+        <div class="color-swatch" data-color="orange" onclick="selectColor(this,'frame')">
+          <div class="circle" style="background:oklch(62% 0.18 45)"></div>
+          <div class="cname">Safety</div>
+        </div>
+        <div class="color-swatch" data-color="blue" onclick="selectColor(this,'frame')">
+          <div class="circle" style="background:#2563eb"></div>
+          <div class="cname">Azul</div>
+        </div>
+        <div class="color-swatch" data-color="olive" onclick="selectColor(this,'frame')">
+          <div class="circle" style="background:#4a5d23"></div>
+          <div class="cname">Oliva</div>
+        </div>
+        <div class="color-swatch" data-color="desert" onclick="selectColor(this,'frame')">
+          <div class="circle" style="background:#c4a46c"></div>
+          <div class="cname">Desert</div>
+        </div>
+      </div>
+
+      <hr style="margin:var(--space-lg) 0">
+
+      <div class="part-category-header"><h3>Cor dos Detalhes (Acento)</h3></div>
+      <div class="color-grid" id="colorAccent">
+        <div class="color-swatch selected" data-color="orange" onclick="selectColor(this,'accent')">
+          <div class="circle" style="background:oklch(62% 0.18 45)"></div>
+          <div class="cname">Laranja</div>
+        </div>
+        <div class="color-swatch" data-color="cyan" onclick="selectColor(this,'accent')">
+          <div class="circle" style="background:#06b6d4"></div>
+          <div class="cname">Ciano</div>
+        </div>
+        <div class="color-swatch" data-color="green" onclick="selectColor(this,'accent')">
+          <div class="circle" style="background:#22c55e"></div>
+          <div class="cname">Verde</div>
+        </div>
+        <div class="color-swatch" data-color="red" onclick="selectColor(this,'accent')">
+          <div class="circle" style="background:#ef4444"></div>
+          <div class="cname">Vermelho</div>
+        </div>
+        <div class="color-swatch" data-color="yellow" onclick="selectColor(this,'accent')">
+          <div class="circle" style="background:#eab308"></div>
+          <div class="cname">Amarelo</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="price-summary">
+      <div class="price-row"><span class="label">Estrutura</span><span class="val" id="pFrame">$199</span></div>
+      <div class="price-row"><span class="label">Motores (×4)</span><span class="val" id="pMotor">$120</span></div>
+      <div class="price-row"><span class="label">Bateria</span><span class="val" id="pBattery">$89</span></div>
+      <div class="price-row"><span class="label">Câmera</span><span class="val" id="pCamera">$149</span></div>
+      <div class="price-row"><span class="label">Hélices</span><span class="val" id="pProps">$19</span></div>
+      <div class="price-row total"><span class="label">Total</span><span class="val" id="pTotal">$576</span></div>
+      <div class="config-actions">
+        <a href="technical-summary.html" class="btn btn-primary btn-full">Revisar & Finalizar</a>
+        <button class="btn" onclick="saveBuild()">Salvar Projeto</button>
+        <button class="btn btn-ghost" onclick="shareBuild()">Compartilhar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const prices = {frame:199, motor:120, battery:89, camera:149, props:19};
+const weights = {frame:220, motor:128, battery:380, camera:85, props:28};
+const flightTimes = {battery:25};
+const partNames = {frame:'X8 Carbon', motor:'R-Link 2207', battery:'6S 5200mAh', camera:'4K 60fps', props:'5" Freestyle'};
+let selectedColor = {frame:'carbon', accent:'orange'};
+
+// Pre-loader
+(function(){
+  const loader = document.getElementById('preloader');
+  const fill = document.getElementById('loaderFill');
+  const status = document.getElementById('loaderStatus');
+  const factEl = document.getElementById('loaderFact');
+  const facts = document.querySelectorAll('#factBank span');
+  const totalSteps = 20;
+  let step = 0;
+  const factCycle = setInterval(() => {
+    const idx = Math.floor(Math.random() * facts.length);
+    factEl.textContent = facts[idx].textContent;
+  }, 2000);
+  function tick(){
+    step++;
+    const pct = Math.min(Math.round((step / totalSteps) * 100), 100);
+    fill.style.width = pct + '%';
+    status.textContent = 'CARREGANDO MÓDULOS ... ' + pct + '%';
+    if(step >= totalSteps){
+      clearInterval(factCycle);
+      loader.classList.add('hidden');
+      return;
+    }
+    setTimeout(tick, 80 + Math.random() * 120);
+  }
+  setTimeout(tick, 300);
+})();
+
+function selectPart(el, category){
+  document.querySelectorAll(`.part-option[data-part="${category}"]`).forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  prices[category] = parseInt(el.dataset.price);
+  weights[category] = parseInt(el.dataset.weight);
+  partNames[category] = el.querySelector('.name').textContent;
+  if(el.dataset.flight) flightTimes[category] = parseInt(el.dataset.flight);
+  updateAll();
+}
+
+function selectColor(el, type){
+  document.querySelectorAll(`#color${type.charAt(0).toUpperCase()+type.slice(1)} .color-swatch`).forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedColor[type] = el.dataset.color;
+  updateViewport();
+}
+
+function updateAll(){
+  updatePrice();
+  updatePerf();
+  updateViewport();
+}
+
+function updatePrice(){
+  const total = Object.values(prices).reduce((a,b) => a+b, 0);
+  for(const [k,v] of Object.entries(prices)){
+    const id = 'p' + k.charAt(0).toUpperCase() + k.slice(1);
+    const el = document.getElementById(id);
+    if(el) el.textContent = '$' + v;
+  }
+  document.getElementById('pTotal').textContent = '$' + total;
+}
+
+function updatePerf(){
+  const totalWeight = Object.values(weights).reduce((a,b) => a+b, 0);
+  const flight = flightTimes.battery || 25;
+  const total = Object.values(prices).reduce((a,b) => a+b, 0);
+  document.getElementById('perfWeight').textContent = (totalWeight / 1000).toFixed(1) + ' kg';
+  document.getElementById('perfFlight').textContent = flight + ' min';
+  document.getElementById('perfCost').textContent = '$' + total;
+}
+
+function updateViewport(){
+  const vp = document.getElementById('viewport3d');
+  vp.style.borderColor = 'var(--accent)';
+  setTimeout(() => vp.style.borderColor = '', 400);
+  document.getElementById('previewPart').textContent = partNames.frame;
+  const labels = {frame:'Estrutura', motor:'Motor', battery:'Bateria', camera:'Câmera', props:'Hélices'};
+  for(const [k,v] of Object.entries(partNames)){
+    const badge = document.getElementById('vp' + k.charAt(0).toUpperCase() + k.slice(1));
+    if(badge) badge.textContent = labels[k] + ' ✓';
+  }
+}
+
+function animViewport(action){
+  const vp = document.getElementById('viewport3d');
+  if(action === 'rotate'){
+    vp.style.transition = 'transform 0.5s ease';
+    vp.style.transform = 'perspective(800px) rotateY(20deg) rotateX(5deg)';
+    setTimeout(() => vp.style.transform = '', 800);
+  } else if(action === 'reset'){
+    vp.style.transform = '';
+  } else if(action === 'wireframe'){
+    const isWire = vp.style.borderStyle === 'dashed';
+    vp.style.borderStyle = isWire ? 'solid' : 'dashed';
+    vp.style.borderColor = isWire ? '' : 'var(--accent-muted)';
+  }
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+  document.querySelectorAll('.part-category').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function setName(){
+  const val = document.getElementById('buildNameInput').value || 'Projeto sem nome';
+  document.getElementById('buildType').textContent = val;
+}
+
+function saveBuild(){
+  const name = document.getElementById('buildNameInput').value || 'Projeto sem nome';
+  const total = Object.values(prices).reduce((a,b) => a+b, 0);
+  const builds = JSON.parse(localStorage.getItem('drone-builds') || '[]');
+  builds.push({id:Date.now(), name, parts: {...partNames}, prices: {...prices}, total, color: {...selectedColor}, date: new Date().toISOString()});
+  localStorage.setItem('drone-builds', JSON.stringify(builds));
+  alert('Projeto "' + name + '" salvo em Minha Frota!');
+  window.location.href = 'dashboard.html';
+}
+
+function shareBuild(){
+  const total = Object.values(prices).reduce((a,b) => a+b, 0);
+  const lines = Object.entries(partNames).map(([k,v]) => v + ' — $' + prices[k]);
+  navigator.clipboard.writeText(
+    'DRØNE — ' + (document.getElementById('buildNameInput').value || 'Projeto') + '\n' +
+    lines.join('\n') + '\nTotal: $' + total
+  ).then(() => alert('Projeto copiado!')).catch(() => alert('Não foi possível copiar.'));
+}
+
+function toggleTheme(){
+  const h = document.documentElement;
+  const d = h.getAttribute('data-theme') !== 'light';
+  h.setAttribute('data-theme', d ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = d ? '[light]' : '[dark]';
+  localStorage.setItem('drone-theme', d ? 'light' : 'dark');
+}
+const s = localStorage.getItem('drone-theme');
+if(s){document.documentElement.setAttribute('data-theme', s);document.getElementById('themeBtn').textContent = '['+s+']'}
+const urlParams = new URLSearchParams(window.location.search);
+const loadId = urlParams.get('load');
+if(loadId){
+  const builds = JSON.parse(localStorage.getItem('drone-builds') || '[]');
+  const build = builds.find(b => b.id == loadId);
+  if(build){
+    document.getElementById('buildNameInput').value = build.name;
+    document.getElementById('buildType').textContent = build.name;
+    if(build.prices) Object.assign(prices, build.prices);
+    if(build.partNames) Object.assign(partNames, build.partNames);
+    updateAll();
+  }
+}
+</script>
+</body>
+</html>

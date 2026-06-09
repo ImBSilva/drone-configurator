@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  --color-industrial-bg: #121212;
+  --color-industrial-surface: #18181b;
+  --color-industrial-surface-hover: #27272a;
+  --color-industrial-border: #27272a;
+  --color-industrial-border-strong: #3f3f46;
+  --color-industrial-fg: #f4f4f5;
+  --color-industrial-fg-secondary: #a1a1aa;
+  --color-industrial-muted: #52525b;
+  --color-industrial-accent: #ff5500;
+  --color-industrial-accent-hover: #ff7733;
+  --color-industrial-accent-muted: #451a03;
+  
+  --color-neon-blue: #00d2ff;
+  
+  --font-display: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+}
+
+/* Base custom resets */
+@layer base {
+  html {
+    background-color: #121212;
+    color: #f4f4f5;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+    font-size: clamp(15px, 0.8vw + 11px, 18px);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  body {
+    margin: 0;
+    background-color: #121212;
+  }
+}
+
+/* Blueprint pattern background utility */
+.bg-blueprint {
+  position: relative;
+}
+.bg-blueprint::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#27272a 1px, transparent 1px),
+    linear-gradient(90deg, #27272a 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.3;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}

@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: drone-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: drone_configurator
+
+  server:
+    build: ./server
+    container_name: drone-server
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      PORT: 5000
+      HOST: 0.0.0.0
+      MONGO_URI: mongodb://mongodb:27017/drone_configurator
+      JWT_SECRET: ${JWT_SECRET:-DRONE_SECURE_JWT_SECRET_KEY_SHA256_2026_PORTFOLIO_APPSEC}
+      CLIENT_URL: http://localhost:5173
+      LOG_LEVEL: info
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:

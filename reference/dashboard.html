@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DRØNE — Minha Frota</title>
+<link rel="stylesheet" href="system.css">
+<style>
+.dash-header{
+  padding:var(--space-xl) var(--space-lg) 0;
+  max-width:1200px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:flex-start;
+  flex-wrap:wrap;gap:var(--space-md);
+}
+.dash-header h1{font-size:clamp(1.3rem,2.5vw,1.8rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:var(--space-xs)}
+.dash-header p{font-size:0.8rem;color:var(--fg-secondary)}
+.dash-header-actions{display:flex;gap:var(--space-sm)}
+
+.dash-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  margin:var(--space-lg) var(--space-lg) 0;
+  max-width:1200px;margin-left:auto;margin-right:auto;
+  border:1px solid var(--border);
+}
+.dash-stat{background:var(--surface);padding:var(--space-lg);text-align:center}
+.dash-stat .val{font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.dash-stat .lbl{font-size:0.65rem;color:var(--muted);margin-top:var(--space-xs);font-family:var(--font-mono)}
+
+.fleet-section{
+  padding:var(--space-xl) var(--space-lg);
+  max-width:1200px;margin:0 auto;
+}
+.fleet-section-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:var(--space-lg);
+}
+.fleet-section-header h2{font-size:clamp(1rem,1.8vw,1.3rem);font-weight:600}
+.fleet-section-header .count{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted)}
+
+.empty-state{
+  text-align:center;
+  padding:var(--space-2xl) var(--space-lg);
+  border:1px dashed var(--border);
+}
+.empty-state .icon{font-size:2rem;color:var(--muted);margin-bottom:var(--space-md);opacity:0.5}
+.empty-state h3{font-size:1.1rem;font-weight:600;margin-bottom:var(--space-sm)}
+.empty-state p{font-size:0.8rem;color:var(--fg-secondary);margin-bottom:var(--space-lg)}
+
+@media(max-width:768px){
+  .dash-stats{grid-template-columns:repeat(2,1fr);margin-left:var(--space-md);margin-right:var(--space-md)}
+  .dash-header{padding:var(--space-lg) var(--space-md) 0}
+  .fleet-section{padding:var(--space-lg) var(--space-md)}
+}
+@media(max-width:430px){
+  .dash-stats{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">DRØ<span style="color:var(--accent)">NE</span></a>
+  <ul class="nav-links">
+    <li><a href="landing.html">Início</a></li>
+    <li><a href="catalog.html">Catálogo</a></li>
+    <li><a href="configurator.html">Configurador</a></li>
+    <li><a href="dashboard.html" class="active">Minha Frota</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:var(--space-md)">
+    <a href="login.html" class="btn btn-sm btn-ghost" style="font-family:var(--font-mono);font-size:0.7rem">Entrar</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">[dark]</button>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">Menu</button>
+  </div>
+</nav>
+
+<div class="dash-header">
+  <div>
+    <h1>Minha Frota</h1>
+    <p>Gerencie suas configurações de drone salvos</p>
+  </div>
+  <div class="dash-header-actions">
+    <a href="configurator.html" class="btn btn-primary">Novo Projeto</a>
+  </div>
+</div>
+
+<div class="dash-stats" id="dashStats">
+  <div class="dash-stat"><div class="val" id="statBuilds">0</div><div class="lbl">Projetos</div></div>
+  <div class="dash-stat"><div class="val" id="statValue">$0</div><div class="lbl">Valor Total</div></div>
+  <div class="dash-stat"><div class="val" id="statAvg">$0</div><div class="lbl">Ticket Médio</div></div>
+  <div class="dash-stat"><div class="val" id="statParts">0</div><div class="lbl">Componentes</div></div>
+</div>
+
+<div class="fleet-section">
+  <div class="fleet-section-header">
+    <h2>Projetos Salvos</h2>
+    <span class="count" id="buildCount">0 projetos</span>
+  </div>
+  <div class="fleet-grid" id="fleetGrid">
+    <div class="empty-state" id="emptyState">
+      <div class="icon">◈</div>
+      <h3>Nenhum projeto ainda</h3>
+      <p>Crie sua primeira configuração de drone no configurador 3D. Seus projetos salvos aparecerão aqui.</p>
+      <a href="configurator.html" class="btn btn-primary">Criar Primeiro Projeto</a>
+    </div>
+  </div>
+</div>
+
+<script>
+function renderFleet(){
+  const builds = JSON.parse(localStorage.getItem('drone-builds') || '[]');
+  const grid = document.getElementById('fleetGrid');
+  const empty = document.getElementById('emptyState');
+  const count = document.getElementById('buildCount');
+
+  if(builds.length === 0){
+    grid.innerHTML = '';
+    grid.appendChild(empty);
+    count.textContent = '0 projetos';
+    document.getElementById('statBuilds').textContent = '0';
+    document.getElementById('statValue').textContent = '$0';
+    document.getElementById('statAvg').textContent = '$0';
+    document.getElementById('statParts').textContent = '0';
+    return;
+  }
+
+  empty.remove();
+  grid.innerHTML = '';
+  count.textContent = builds.length + ' projeto' + (builds.length !== 1 ? 's' : '');
+
+  let totalValue = 0;
+  let totalParts = 0;
+
+  builds.slice().reverse().forEach(b => {
+    totalValue += b.total || 0;
+    totalParts += Object.keys(b.parts || {}).length;
+
+    const card = document.createElement('div');
+    card.className = 'fleet-card';
+    const date = new Date(b.date);
+    const dateStr = date.toLocaleDateString('pt-BR');
+    const partsList = Object.values(b.parts || {}).join(', ');
+
+    card.innerHTML =
+      '<div class="fleet-card-header">' +
+        '<h3>' + (b.name || 'Projeto sem nome') + '</h3>' +
+        '<span class="badge badge-neutral">' + dateStr + '</span>' +
+      '</div>' +
+      '<div class="meta">' +
+        (partsList ? '<span>' + partsList + '</span>' : '') +
+      '</div>' +
+      '<div class="price-tag">$' + (b.total || 0).toLocaleString() + '</div>' +
+      '<div class="fleet-actions">' +
+        '<a href="configurator.html?load=' + b.id + '" class="btn btn-sm">Editar</a>' +
+        '<button class="btn btn-sm" onclick="duplicateBuild(' + b.id + ')">Duplicar</button>' +
+        '<button class="btn btn-sm btn-outline-accent" onclick="deleteBuild(' + b.id + ')">Excluir</button>' +
+      '</div>';
+    grid.appendChild(card);
+  });
+
+  document.getElementById('statBuilds').textContent = builds.length;
+  document.getElementById('statValue').textContent = '$' + totalValue.toLocaleString();
+  document.getElementById('statAvg').textContent = '$' + (builds.length ? Math.round(totalValue / builds.length).toLocaleString() : '0');
+  document.getElementById('statParts').textContent = totalParts;
+}
+
+function deleteBuild(id){
+  if(!confirm('Excluir este projeto?')) return;
+  let builds = JSON.parse(localStorage.getItem('drone-builds') || '[]');
+  builds = builds.filter(b => b.id !== id);
+  localStorage.setItem('drone-builds', JSON.stringify(builds));
+  renderFleet();
+}
+
+function duplicateBuild(id){
+  const builds = JSON.parse(localStorage.getItem('drone-builds') || '[]');
+  const orig = builds.find(b => b.id === id);
+  if(!orig) return;
+  const copy = {...orig, id: Date.now(), name: orig.name + ' (cópia)', date: new Date().toISOString()};
+  builds.push(copy);
+  localStorage.setItem('drone-builds', JSON.stringify(builds));
+  renderFleet();
+}
+
+function toggleTheme(){
+  const h = document.documentElement;
+  const d = h.getAttribute('data-theme') !== 'light';
+  h.setAttribute('data-theme', d ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = d ? '[light]' : '[dark]';
+  localStorage.setItem('drone-theme', d ? 'light' : 'dark');
+}
+const s = localStorage.getItem('drone-theme');
+if(s){document.documentElement.setAttribute('data-theme', s);document.getElementById('themeBtn').textContent = '['+s+']'}
+renderFleet();
+</script>
+</body>
+</html>

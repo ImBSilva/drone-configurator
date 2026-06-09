@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DRØNE — Criar Conta</title>
+<link rel="stylesheet" href="system.css">
+<style>
+.auth-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:calc(100vh - 49px);
+}
+.auth-form{
+  padding:var(--space-2xl) var(--space-xl);
+  display:flex;flex-direction:column;justify-content:center;
+  max-width:480px;
+}
+.auth-form h1{
+  font-family:var(--font-display);
+  font-size:clamp(1.5rem,2.5vw,2rem);
+  font-weight:700;letter-spacing:-0.02em;
+  margin-bottom:var(--space-sm);
+}
+.auth-form .subtitle{
+  font-size:0.8rem;
+  color:var(--fg-secondary);
+  margin-bottom:var(--space-xl);
+}
+.form-group{margin-bottom:var(--space-md)}
+.form-group label{display:block;margin-bottom:var(--space-xs);font-size:0.75rem;font-weight:500;color:var(--fg-secondary)}
+.form-group .input{width:100%}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)}
+.form-hint{font-size:0.65rem;color:var(--muted);margin-top:var(--space-xs);font-family:var(--font-mono)}
+.form-error{font-size:0.65rem;color:var(--danger);margin-top:var(--space-xs);font-family:var(--font-mono);display:none}
+.auth-alt{text-align:center;margin-top:var(--space-lg);font-size:0.8rem;color:var(--fg-secondary)}
+.auth-alt a{color:var(--accent)}
+.auth-divider{
+  display:flex;align-items:center;gap:var(--space-md);
+  margin:var(--space-md) 0;
+  color:var(--muted);font-size:0.75rem;
+}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.auth-side{
+  background:var(--surface);
+  border-left:1px solid var(--border);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:var(--space-xl);
+}
+.auth-side blockquote{
+  font-size:clamp(0.9rem,1.3vw,1.1rem);
+  color:var(--fg-secondary);
+  font-style:normal;
+  line-height:1.6;
+  max-width:35ch;
+}
+.auth-side cite{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--muted);
+  margin-top:var(--space-lg);
+  display:block;
+}
+.password-rules{
+  display:flex;gap:var(--space-sm);flex-wrap:wrap;
+  margin-top:var(--space-xs);
+}
+.pw-rule{
+  font-size:0.6rem;font-family:var(--font-mono);
+  color:var(--muted);
+  padding:2px var(--space-sm);
+  border:1px solid var(--border);
+}
+.pw-rule.ok{color:var(--success);border-color:var(--success)}
+
+@media(max-width:768px){
+  .auth-layout{grid-template-columns:1fr}
+  .auth-side{display:none}
+  .auth-form{padding:var(--space-xl) var(--space-lg);max-width:100%}
+  .form-row{grid-template-columns:1fr}
+}
+@media(max-width:430px){
+  .auth-form{padding:var(--space-lg) var(--space-md)}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">DRØ<span style="color:var(--accent)">NE</span></a>
+  <ul class="nav-links">
+    <li><a href="landing.html">Início</a></li>
+    <li><a href="catalog.html">Catálogo</a></li>
+    <li><a href="configurator.html">Configurador</a></li>
+    <li><a href="dashboard.html">Minha Frota</a></li>
+    <li><a href="login.html">Entrar</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:var(--space-md)">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">[dark]</button>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">Menu</button>
+  </div>
+</nav>
+
+<div class="auth-layout">
+  <div class="auth-form">
+    <h1>Criar sua Conta</h1>
+    <p class="subtitle">Cadastre-se para salvar projetos, gerenciar sua frota e comprar componentes.</p>
+
+    <form id="registerForm" onsubmit="return handleRegister(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="regName">Nome completo</label>
+          <input type="text" id="regName" class="input" placeholder="Seu nome" required autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="regOrg">Organização</label>
+          <input type="text" id="regOrg" class="input" placeholder="Empresa ou órgão">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regEmail">Email</label>
+        <input type="email" id="regEmail" class="input" placeholder="voce@empresa.com" required autocomplete="email">
+        <span class="form-error" id="emailError">Email inválido</span>
+      </div>
+
+      <div class="form-group">
+        <label for="regPassword">Senha</label>
+        <input type="password" id="regPassword" class="input" placeholder="Mínimo 8 caracteres" required autocomplete="new-password" minlength="8">
+        <div class="password-rules" id="pwRules">
+          <span class="pw-rule" id="pwLen">8+ caracteres</span>
+          <span class="pw-rule" id="pwNum">Número</span>
+          <span class="pw-rule" id="pwUpper">Maiúscula</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regConfirm">Confirmar senha</label>
+        <input type="password" id="regConfirm" class="input" placeholder="Repita a senha" required autocomplete="new-password">
+        <span class="form-error" id="pwError">Senhas não conferem</span>
+      </div>
+
+      <div class="form-group">
+        <label for="regRole">Função</label>
+        <select id="regRole" class="input">
+          <option value="">Selecione...</option>
+          <option value="gov">Governo / Defesa</option>
+          <option value="agri">Agricultura</option>
+          <option value="geo">Geoespacial / Topografia</option>
+          <option value="security">Segurança / Vigilância</option>
+          <option value="ind">Indústria</option>
+          <option value="other">Outro</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:var(--space-md)">
+        Criar Conta
+      </button>
+    </form>
+
+    <div class="auth-divider">ou</div>
+    <button class="btn btn-lg" onclick="alert('SSO — Google, GitHub, Microsoft')" style="width:100%;justify-content:center">
+      Continuar com SSO
+    </button>
+
+    <p class="auth-alt">Já tem conta? <a href="login.html">Fazer login</a></p>
+    <p class="auth-alt" style="margin-top:var(--space-sm)"><a href="forgot-password.html">Esqueceu a senha?</a></p>
+  </div>
+
+  <div class="auth-side">
+    <blockquote>
+      "Com a DRØNE, reduzimos nosso tempo de configuração de drone de 3 dias para 15 minutos. A gestão de frota integrada transformou nossas operações."
+    </blockquote>
+    <cite>— Coordenador de Operações, Agricultura de Precisão</cite>
+  </div>
+</div>
+
+<script>
+const pwInput = document.getElementById('regPassword');
+const pwConfirm = document.getElementById('regConfirm');
+
+pwInput.addEventListener('input', () => {
+  const v = pwInput.value;
+  document.getElementById('pwLen').classList.toggle('ok', v.length >= 8);
+  document.getElementById('pwNum').classList.toggle('ok', /\d/.test(v));
+  document.getElementById('pwUpper').classList.toggle('ok', /[A-Z]/.test(v));
+});
+
+function handleRegister(e){
+  e.preventDefault();
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pw = pwInput.value;
+  const confirm = pwConfirm.value;
+
+  document.getElementById('emailError').style.display = 'none';
+  document.getElementById('pwError').style.display = 'none';
+
+  if(!email.includes('@')){
+    document.getElementById('emailError').style.display = 'block';
+    return false;
+  }
+  if(pw !== confirm){
+    document.getElementById('pwError').style.display = 'block';
+    return false;
+  }
+  if(pw.length < 8){
+    alert('A senha deve ter no mínimo 8 caracteres.');
+    return false;
+  }
+
+  const users = JSON.parse(localStorage.getItem('drone-users') || '[]');
+  if(users.find(u => u.email === email)){
+    alert('Este email já está cadastrado. Faça login.');
+    window.location.href = 'login.html';
+    return false;
+  }
+
+  users.push({
+    id: Date.now(),
+    name,
+    email,
+    org: document.getElementById('regOrg').value.trim(),
+    role: document.getElementById('regRole').value,
+    passwordHash: btoa(pw),
+    created: new Date().toISOString()
+  });
+  localStorage.setItem('drone-users', JSON.stringify(users));
+  localStorage.setItem('drone-session', JSON.stringify({id: users[users.length-1].id, name, email}));
+  alert('Conta criada com sucesso! Bem-vindo, ' + name + '.');
+  window.location.href = 'dashboard.html';
+  return false;
+}
+
+function toggleTheme(){
+  const h = document.documentElement;
+  const d = h.getAttribute('data-theme') !== 'light';
+  h.setAttribute('data-theme', d ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = d ? '[light]' : '[dark]';
+  localStorage.setItem('drone-theme', d ? 'light' : 'dark');
+}
+const s = localStorage.getItem('drone-theme');
+if(s){document.documentElement.setAttribute('data-theme', s);document.getElementById('themeBtn').textContent = '['+s+']'}
+</script>
+</body>
+</html>

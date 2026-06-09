@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DRØNE — Carrinho</title>
+<link rel="stylesheet" href="system.css">
+<style>
+.cart-layout{
+  display:grid;
+  grid-template-columns:1.5fr 1fr;
+  gap:var(--space-xl);
+  padding:var(--space-xl) var(--space-lg);
+  max-width:1200px;
+  margin:0 auto;
+  min-height:calc(100vh - 49px);
+}
+.page-header{padding:var(--space-xl) var(--space-lg) 0;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--border)}
+.page-header h1{font-size:clamp(1.3rem,2.5vw,1.8rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:var(--space-xs)}
+.page-header p{font-size:0.8rem;color:var(--fg-secondary)}
+
+.cart-item{
+  border:1px solid var(--border);
+  padding:var(--space-lg);
+  margin-bottom:var(--space-md);
+}
+.cart-item-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--space-sm)}
+.cart-item h3{font-size:1rem;font-weight:600;margin-bottom:2px}
+.cart-item .desc{font-size:0.7rem;color:var(--fg-secondary)}
+.cart-item .item-price{font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--accent)}
+.cart-item-details{display:flex;gap:var(--space-sm);align-items:center;flex-wrap:wrap}
+.qty-group{display:flex;align-items:center;gap:0;border:1px solid var(--border)}
+.qty-btn{
+  width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:none;
+  color:var(--fg);cursor:pointer;
+  font-family:var(--font-mono);font-size:0.85rem;
+}
+.qty-btn:hover{background:var(--surface-hover)}
+.qty-val{width:32px;text-align:center;font-family:var(--font-mono);font-size:0.8rem}
+
+.cart-summary{
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:var(--space-lg);
+  height:fit-content;
+  position:sticky;top:65px;
+}
+.cart-summary h3{font-size:1rem;font-weight:600;margin-bottom:var(--space-md);padding-bottom:var(--space-md);border-bottom:1px solid var(--border)}
+.summary-row{display:flex;justify-content:space-between;margin-bottom:var(--space-xs);font-size:0.8rem}
+.summary-row .sl{color:var(--fg-secondary)}
+.summary-row .sv{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.summary-row.total{font-size:1.2rem;font-weight:700;border-top:1px solid var(--border);padding-top:var(--space-md);margin-top:var(--space-sm)}
+.summary-row.total .sv{color:var(--accent)}
+.summary-actions{display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-lg)}
+.summary-actions .btn{justify-content:center}
+.promo-row{display:flex;gap:var(--space-sm);margin:var(--space-md) 0}
+.promo-row input{flex:1}
+.promo-msg{font-size:0.65rem;font-family:var(--font-mono);color:var(--success);display:none;margin-top:var(--space-xs)}
+
+.login-prompt{
+  border:1px solid var(--border);
+  padding:var(--space-md);
+  margin-bottom:var(--space-lg);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-md);
+}
+.login-prompt p{font-size:0.8rem;color:var(--fg-secondary)}
+
+@media(max-width:768px){
+  .cart-layout{grid-template-columns:1fr;padding:var(--space-lg) var(--space-md)}
+  .page-header{padding:var(--space-lg) var(--space-md) 0}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">DRØ<span style="color:var(--accent)">NE</span></a>
+  <ul class="nav-links">
+    <li><a href="landing.html">Início</a></li>
+    <li><a href="catalog.html">Catálogo</a></li>
+    <li><a href="configurator.html">Configurador</a></li>
+    <li><a href="dashboard.html">Minha Frota</a></li>
+    <li><a href="login.html">Entrar</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:var(--space-md)">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">[dark]</button>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">Menu</button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Carrinho</h1>
+  <p><span id="cartCount">2</span> itens no seu carrinho</p>
+</div>
+
+<div class="cart-layout">
+  <div>
+    <div class="login-prompt">
+      <p><strong>Login recomendado</strong> para finalizar a compra e gerenciar seus projetos.</p>
+      <a href="login.html" class="btn btn-sm">Entrar</a>
+    </div>
+
+    <div class="cart-item">
+      <div class="cart-item-top">
+        <div>
+          <h3>Surveyor X8</h3>
+          <div class="desc">Drone pré-configurado · Vigilância</div>
+        </div>
+        <div class="item-price" id="item1Price">$2,449</div>
+      </div>
+      <div class="cart-item-details">
+        <div class="qty-group">
+          <button class="qty-btn" onclick="qty('item1',-1)">−</button>
+          <span class="qty-val" id="item1Qty">1</span>
+          <button class="qty-btn" onclick="qty('item1',1)">+</button>
+        </div>
+        <button class="btn btn-sm btn-ghost" onclick="removeItem('item1')">Remover</button>
+      </div>
+    </div>
+
+    <div class="cart-item">
+      <div class="cart-item-top">
+        <div>
+          <h3>Custom Build — Vigilante X8</h3>
+          <div class="desc">Configuração personalizada · 5 componentes</div>
+        </div>
+        <div class="item-price" id="item2Price">$576</div>
+      </div>
+      <div class="cart-item-details">
+        <div class="qty-group">
+          <button class="qty-btn" onclick="qty('item2',-1)">−</button>
+          <span class="qty-val" id="item2Qty">1</span>
+          <button class="qty-btn" onclick="qty('item2',1)">+</button>
+        </div>
+        <button class="btn btn-sm btn-ghost" onclick="removeItem('item2')">Remover</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="cart-summary">
+      <h3>Resumo do Pedido</h3>
+      <div class="summary-row"><span class="sl">Subtotal</span><span class="sv" id="subtotal">$3,025</span></div>
+      <div class="summary-row"><span class="sl">Frete</span><span class="sv">$0</span></div>
+
+      <div class="promo-row">
+        <input type="text" class="input" id="promoCode" placeholder="Cupom de desconto">
+        <button class="btn btn-sm" onclick="applyPromo()">Aplicar</button>
+      </div>
+      <div class="promo-msg" id="promoMsg">Cupom aplicado: DRONE10 — 10% off</div>
+
+      <div class="summary-row total"><span class="sl">Total</span><span class="sv" id="total">$3,025</span></div>
+
+      <div class="summary-actions">
+        <a href="checkout.html" class="btn btn-primary btn-lg">Finalizar Compra</a>
+        <a href="catalog.html" class="btn btn-ghost">Continuar Comprando</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let cartItems = {item1: {price: 2449, qty: 1}, item2: {price: 576, qty: 1}};
+
+function qty(id, delta){
+  cartItems[id].qty = Math.max(1, cartItems[id].qty + delta);
+  document.getElementById(id + 'Qty').textContent = cartItems[id].qty;
+  updateSummary();
+}
+
+function removeItem(id){
+  const el = document.getElementById(id)?.closest('.cart-item');
+  if(el) el.style.display = 'none';
+  cartItems[id].qty = 0;
+  updateSummary();
+}
+
+function updateSummary(){
+  let subtotal = 0;
+  let count = 0;
+  for(const [k,v] of Object.entries(cartItems)){
+    subtotal += v.price * v.qty;
+    if(v.qty > 0) count++;
+  }
+  document.getElementById('subtotal').textContent = '$' + subtotal.toLocaleString();
+  document.getElementById('total').textContent = '$' + subtotal.toLocaleString();
+  document.getElementById('cartCount').textContent = count;
+}
+
+function applyPromo(){
+  const code = document.getElementById('promoCode').value.trim().toUpperCase();
+  const msg = document.getElementById('promoMsg');
+  if(code === 'DRONE10'){
+    msg.style.display = 'block';
+    msg.style.color = 'var(--success)';
+    const subtotal = Object.values(cartItems).reduce((a,v) => a + v.price * v.qty, 0);
+    document.getElementById('total').textContent = '$' + (subtotal * 0.9).toLocaleString();
+  } else {
+    msg.style.display = 'block';
+    msg.style.color = 'var(--danger)';
+    msg.textContent = 'Cupom inválido';
+  }
+}
+
+function toggleTheme(){
+  const h = document.documentElement;
+  const d = h.getAttribute('data-theme') !== 'light';
+  h.setAttribute('data-theme', d ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = d ? '[light]' : '[dark]';
+  localStorage.setItem('drone-theme', d ? 'light' : 'dark');
+}
+const s = localStorage.getItem('drone-theme');
+if(s){document.documentElement.setAttribute('data-theme', s);document.getElementById('themeBtn').textContent = '['+s+']'}
+</script>
+</body>
+</html>

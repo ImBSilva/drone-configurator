@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DRØNE — Design System Spec</title>
+<link rel="stylesheet" href="system.css">
+<style>
+.spec-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:var(--space-md) var(--space-lg);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;
+  background:color-mix(in oklab, var(--bg) 96%, transparent);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  z-index:100;
+}
+.spec-title{font-family:var(--font-mono);font-size:0.8rem;color:var(--fg-secondary);letter-spacing:-0.01em}
+.spec-title strong{color:var(--fg);font-weight:600}
+.spec-body{padding:var(--space-xl) var(--space-lg);max-width:1280px;margin:0 auto}
+.spec-section{margin-bottom:var(--space-2xl)}
+.spec-section-header{
+  display:flex;align-items:baseline;gap:var(--space-md);
+  margin-bottom:var(--space-lg);
+  padding-bottom:var(--space-sm);
+  border-bottom:1px solid var(--border);
+}
+.spec-section-header h2{
+  font-family:var(--font-mono);
+  font-size:0.75rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.08em;
+  color:var(--fg);
+}
+.spec-section-header span{font-size:0.7rem;color:var(--muted);font-family:var(--font-mono)}
+.spec-desc{font-size:0.85rem;color:var(--fg-secondary);margin-bottom:var(--space-lg);max-width:60ch;line-height:1.7}
+
+/* Color swatch grid */
+.swatch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--space-md)}
+.swatch{border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden}
+.swatch-preview{height:80px;position:relative}
+.swatch-info{padding:var(--space-sm) var(--space-md);background:var(--surface)}
+.swatch-name{font-size:0.8rem;font-weight:600;color:var(--fg)}
+.swatch-value{font-size:0.7rem;font-family:var(--font-mono);color:var(--muted);margin-top:2px}
+.swatch-tag{font-size:0.65rem;font-family:var(--font-mono);color:var(--muted);margin-top:1px}
+
+/* Type scale */
+.type-grid{display:grid;grid-template-columns:1fr auto;gap:var(--space-sm) var(--space-lg);align-items:baseline}
+.type-label{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);text-align:right}
+.type-sample{color:var(--fg);line-height:1.2}
+.type-tag{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);grid-column:2}
+.type-desc{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted)}
+.type-body{font-family:var(--font-body)}
+.type-mono{font-family:var(--font-mono)}
+
+/* Component showcase */
+.comp-showcase{display:flex;flex-wrap:wrap;gap:var(--space-md);align-items:center}
+.comp-group{margin-bottom:var(--space-lg)}
+.comp-group-label{font-size:0.7rem;font-family:var(--font-mono);color:var(--muted);margin-bottom:var(--space-sm)}
+
+/* Spacing scale */
+.spacing-bar{display:flex;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-sm)}
+.spacing-block{background:var(--accent-muted);border-radius:2px;flex-shrink:0}
+.spacing-label{font-size:0.7rem;font-family:var(--font-mono);color:var(--muted)}
+
+/* Token table */
+.token-table{width:100%;border-collapse:collapse}
+.token-table th{
+  text-align:left;padding:var(--space-sm) var(--space-md);
+  font-size:0.7rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:0.05em;color:var(--muted);
+  border-bottom:1px solid var(--border);
+  font-family:var(--font-mono);
+}
+.token-table td{
+  padding:var(--space-sm) var(--space-md);
+  font-size:0.8rem;font-family:var(--font-mono);
+  border-bottom:1px solid var(--border);
+  font-variant-numeric:tabular-nums;
+}
+.token-table .token-preview{width:20px;height:20px;border-radius:4px;border:1px solid var(--border)}
+.token-table tr:hover td{background:var(--surface-hover)}
+
+/* breakpoints */
+.bp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:var(--space-md)}
+.bp-card{padding:var(--space-md);border:1px solid var(--border);border-radius:var(--radius-md)}
+.bp-name{font-size:0.9rem;font-weight:600;color:var(--fg)}
+.bp-width{font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);margin-top:var(--space-xs)}
+.bp-desc{font-size:0.75rem;color:var(--fg-secondary);margin-top:var(--space-xs)}
+
+/* Icon examples */
+.icon-grid{display:flex;flex-wrap:wrap;gap:var(--space-md)}
+.icon-cell{
+  display:flex;flex-direction:column;align-items:center;gap:var(--space-xs);
+  padding:var(--space-md);border:1px solid var(--border);border-radius:var(--radius-sm);
+  width:80px;text-align:center;
+}
+.icon-cell svg{color:var(--fg);width:20px;height:20px}
+.icon-cell span{font-size:0.6rem;font-family:var(--font-mono);color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav class="spec-nav">
+  <div class="spec-title"><strong>DRØNE</strong> Design System v1.0</div>
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">[dark]</button>
+</nav>
+
+<div class="spec-body">
+
+  <!-- Overview -->
+  <div class="spec-section">
+    <div class="spec-section-header"><h2>Overview</h2><span>01</span></div>
+    <p class="spec-desc" style="font-size:1rem;color:var(--fg);max-width:70ch">
+      Tech/industrial design system for enterprise drone platforms — surveillance, agriculture, geospatial surveying, and government initiatives.
+      Dark-first with a full light variant. Sans-serif system (Inter), monospace for data (JetBrains Mono), technical blue accent.
+    </p>
+    <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;margin-top:var(--space-lg)">
+      <div class="badge">Figma variables ready</div>
+      <div class="badge badge-success">Dark + Light</div>
+      <div class="badge badge-neutral">Responsive 360–1920px</div>
+      <div class="badge badge-neutral">CJX-ready</div>
+    </div>
+  </div>
+
+  <!-- 1. Color Tokens -->
+  <div class="spec-section">
+    <div class="spec-section-header"><h2>Colors</h2><span>02</span></div>
+    <p class="spec-desc">
+      All tokens use OKLch for perceptual uniformity. Map these directly to Figma variables.
+      Dark is the default theme; light is activated via <code style="font-family:var(--font-mono);font-size:0.8rem;background:var(--code-bg);padding:0 4px;border-radius:2px">html[data-theme="light"]</code>.
+    </p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-xl);margin-bottom:var(--space-lg)">
+      <div>
+        <h3 style="font-family:var(--font-mono);font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:var(--space-md)">Dark (default)</h3>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(12% 0.012 250)"></div><div class="swatch-info"><div class="swatch-name">--bg</div><div class="swatch-value">oklch(12% 0.012 250)</div><div class="swatch-tag">#1a1c23</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(18% 0.015 250)"></div><div class="swatch-info"><div class="swatch-name">--surface</div><div class="swatch-value">oklch(18% 0.015 250)</div><div class="swatch-tag">#252833</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(92% 0.005 250)"></div><div class="swatch-info"><div class="swatch-name">--fg</div><div class="swatch-value">oklch(92% 0.005 250)</div><div class="swatch-tag">#e8eaed</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(45% 0.01 250)"></div><div class="swatch-info"><div class="swatch-name">--muted</div><div class="swatch-value">oklch(45% 0.01 250)</div><div class="swatch-tag">#6a6e7a</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(28% 0.01 250)"></div><div class="swatch-info"><div class="swatch-name">--border</div><div class="swatch-value">oklch(28% 0.01 250)</div><div class="swatch-tag">#3d404a</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(58% 0.16 220)"></div><div class="swatch-info"><div class="swatch-name">--accent</div><div class="swatch-value">oklch(58% 0.16 220)</div><div class="swatch-tag">#4d8bf4</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(52% 0.14 145)"></div><div class="swatch-info"><div class="swatch-name">--success</div><div class="swatch-value">oklch(52% 0.14 145)</div><div class="swatch-tag">#34b86b</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(60% 0.14 85)"></div><div class="swatch-info"><div class="swatch-name">--warning</div><div class="swatch-value">oklch(60% 0.14 85)</div><div class="swatch-tag">#d4a132</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(52% 0.16 30)"></div><div class="swatch-info"><div class="swatch-name">--danger</div><div class="swatch-value">oklch(52% 0.16 30)</div><div class="swatch-tag">#d64545</div></div></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:var(--font-mono);font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--fg-secondary);margin-bottom:var(--space-md)">Light</h3>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(98% 0.005 240)"></div><div class="swatch-info"><div class="swatch-name">--bg</div><div class="swatch-value">oklch(98% 0.005 240)</div><div class="swatch-tag">#f4f5f8</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(100% 0 0)"></div><div class="swatch-info"><div class="swatch-name">--surface</div><div class="swatch-value">oklch(100% 0 0)</div><div class="swatch-tag">#ffffff</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(18% 0.012 250)"></div><div class="swatch-info"><div class="swatch-name">--fg</div><div class="swatch-value">oklch(18% 0.012 250)</div><div class="swatch-tag">#282b33</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(55% 0.01 250)"></div><div class="swatch-info"><div class="swatch-name">--muted</div><div class="swatch-value">oklch(55% 0.01 250)</div><div class="swatch-tag">#7d818e</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(88% 0.008 240)"></div><div class="swatch-info"><div class="swatch-name">--border</div><div class="swatch-value">oklch(88% 0.008 240)</div><div class="swatch-tag">#dcdde3</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(52% 0.16 220)"></div><div class="swatch-info"><div class="swatch-name">--accent</div><div class="swatch-value">oklch(52% 0.16 220)</div><div class="swatch-tag">#3b7de6</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(48% 0.14 145)"></div><div class="swatch-info"><div class="swatch-name">--success</div><div class="swatch-value">oklch(48% 0.14 145)</div><div class="swatch-tag">#2ea85f</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(56% 0.14 85)"></div><div class="swatch-info"><div class="swatch-name">--warning</div><div class="swatch-value">oklch(56% 0.14 85)</div><div class="swatch-tag">#c9942e</div></div></div>
+          <div class="swatch"><div class="swatch-preview" style="background:oklch(48% 0.16 30)"></div><div class="swatch-info"><div class="swatch-name">--danger</div><div class="swatch-value">oklch(48% 0.16 30)</div><div class="swatch-tag">#cc3e3e</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-family:var(--font-mono);font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:var(--space-md)">All CSS Variables</h3>
+    <table class="token-table">
+      <thead><tr><th>Token</th><th>Dark Value</th><th>Light Value</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td>--bg</td><td>oklch(12% 0.012 250)</td><td>oklch(98% 0.005 240)</td><td>Page background</td></tr>
+        <tr><td>--surface</td><td>oklch(18% 0.015 250)</td><td>oklch(100% 0 0)</td><td>Card, panel, input bg</td></tr>
+        <tr><td>--surface-hover</td><td>oklch(22% 0.015 250)</td><td>oklch(96% 0.005 240)</td><td>Hover state for surface</td></tr>
+        <tr><td>--fg</td><td>oklch(92% 0.005 250)</td><td>oklch(18% 0.012 250)</td><td>Primary text</td></tr>
+        <tr><td>--fg-secondary</td><td>oklch(60% 0.01 250)</td><td>oklch(40% 0.01 250)</td><td>Secondary text / nav links</td></tr>
+        <tr><td>--muted</td><td>oklch(45% 0.01 250)</td><td>oklch(55% 0.01 250)</td><td>Placeholder, disabled, metadata</td></tr>
+        <tr><td>--border</td><td>oklch(28% 0.01 250)</td><td>oklch(88% 0.008 240)</td><td>Default border</td></tr>
+        <tr><td>--border-strong</td><td>oklch(38% 0.01 250)</td><td>oklch(78% 0.008 240)</td><td>Hover border, focus</td></tr>
+        <tr><td>--accent</td><td>oklch(58% 0.16 220)</td><td>oklch(52% 0.16 220)</td><td>Primary action, links</td></tr>
+        <tr><td>--accent-hover</td><td>oklch(62% 0.18 220)</td><td>oklch(48% 0.18 220)</td><td>Accent hover</td></tr>
+        <tr><td>--accent-muted</td><td>oklch(30% 0.12 220)</td><td>oklch(70% 0.12 220)</td><td>Accent backgrounds, selection</td></tr>
+        <tr><td>--success</td><td>oklch(52% 0.14 145)</td><td>oklch(48% 0.14 145)</td><td>Success / active status</td></tr>
+        <tr><td>--warning</td><td>oklch(60% 0.14 85)</td><td>oklch(56% 0.14 85)</td><td>Warning state</td></tr>
+        <tr><td>--danger</td><td>oklch(52% 0.16 30)</td><td>oklch(48% 0.16 30)</td><td>Error / destructive</td></tr>
+        <tr><td>--code-bg</td><td>oklch(14% 0.01 250)</td><td>oklch(95% 0.005 240)</td><td>Code inline background</td></tr>
+        <tr><td>--overlay</td><td>oklch(0% 0 0 / 0.5)</td><td>oklch(0% 0 0 / 0.15)</td><td>Modal / drawer overlay</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2. Typography -->
+  <div class="spec-section">
+    <div class="spec-section-header"><h2>Typography</h2><span>03</span></div>
+    <p class="spec-desc">
+      System sans-serif stack (Inter, SF Pro, Segoe UI) — single family for display and body.
+      Monospace (JetBrains Mono) for data, code, prices, and technical specs. Fluid type scale with <code style="font-family:var(--font-mono);font-size:0.8rem;background:var(--code-bg);padding:0 4px;border-radius:2px">clamp()</code>.
+    </p>
+
+    <div class="comp-group">
+      <div class="comp-group-label">Font Stacks</div>
+      <div class="type-grid" style="margin-top:var(--space-sm)">
+        <div class="type-label">Display / Body</div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:1rem">
+          -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif
+        </div>
+        <div class="type-label">Monospace</div>
+        <div class="type-sample" style="font-family:var(--font-mono);font-size:0.9rem">
+          'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, monospace
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-group" style="margin-top:var(--space-xl)">
+      <div class="comp-group-label">Type Scale</div>
+      <div class="type-grid" style="margin-top:var(--space-sm)">
+        <div class="type-label">Display XL</div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:clamp(3rem,7vw,6rem);font-weight:800;letter-spacing:-0.03em;line-height:0.9">Aerial Ops</div>
+        <div class="type-tag">var(--font-display) 800 clamp(3rem,7vw,6rem) -0.03em</div>
+      </div>
+      <div class="type-grid">
+        <div class="type-label">Display L</div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:clamp(2rem,4vw,3.5rem);font-weight:700;letter-spacing:-0.02em;line-height:1">Configure & Deploy</div>
+        <div class="type-tag">var(--font-display) 700 clamp(2rem,4vw,3.5rem)</div>
+      </div>
+      <div class="type-grid">
+        <div class="type-label">Heading</div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:clamp(1.3rem,2.2vw,1.8rem);font-weight:600;letter-spacing:-0.01em;line-height:1.2">Drone Specifications</div>
+        <div class="type-tag">var(--font-display) 600 clamp(1.3rem,2.2vw,1.8rem)</div>
+      </div>
+      <div class="type-grid">
+        <div class="type-label">Subheading</div>
+        <div class="type-sample" style="font-family:var(--font-body);font-size:clamp(1rem,1.3vw,1.1rem);font-weight:500;color:var(--fg-secondary)">Real-time telemetry and flight planning</div>
+        <div class="type-tag">var(--font-body) 500 clamp(1rem,1.3vw,1.1rem)</div>
+      </div>
+      <div class="type-grid">
+        <div class="type-label">Body</div>
+        <div class="type-sample" style="font-family:var(--font-body);font-size:0.9rem">Designed for agricultural surveying, infrastructure inspection, and security patrol — military-grade reliability in a modular airframe.</div>
+        <div class="type-tag">var(--font-body) 400 0.9rem</div>
+      </div>
+      <div class="type-grid">
+        <div class="type-label">Small / Meta</div>
+        <div class="type-sample" style="font-family:var(--font-body);font-size:0.75rem;color:var(--muted)">12 min flight time · 4S 2200mAh · 180g</div>
+        <div class="type-tag">var(--font-body) 400 0.75rem</div>
+      </div>
+      <div class="type-grid">
+        <div class="type-label">Mono / Data</div>
+        <div class="type-sample" style="font-family:var(--font-mono);font-size:0.85rem;font-variant-numeric:tabular-nums">$1,249.00 · 12,450 RPM · 22.4V</div>
+        <div class="type-tag">var(--font-mono) 400 0.85rem tabular-nums</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Spacing -->
+  <div class="spec-section">
+    <div class="spec-section-header"><h2>Spacing</h2><span>04</span></div>
+    <p class="spec-desc">8-point system with 4px micro-step for tight UI. Use these for margin, padding, and gap values.</p>
+    <div class="comp-group">
+      <div class="comp-group-label">Scale</div>
+      <div class="spacing-bar"><div class="spacing-block" style="width:4px;height:20px"></div><span class="spacing-label">--space-xs = 4px (0.25rem)</span></div>
+      <div class="spacing-bar"><div class="spacing-block" style="width:8px;height:20px"></div><span class="spacing-label">--space-sm = 8px (0.5rem)</span></div>
+      <div class="spacing-bar"><div class="spacing-block" style="width:16px;height:20px"></div><span class="spacing-label">--space-md = 16px (1rem)</span></div>
+      <div class="spacing-bar"><div class="spacing-block" style="width:32px;height:20px"></div><span class="spacing-label">--space-lg = 32px (2rem)</span></div>
+      <div class="spacing-bar"><div class="spacing-block" style="width:64px;height:20px"></div><span class="spacing-label">--space-xl = 64px (4rem)</span></div>
+      <div class="spacing-bar"><div class="spacing-block" style="width:128px;height:20px"></div><span class="spacing-label">--space-2xl = 128px (8rem)</span></div>
+    </div>
+  </div>
+
+  <!-- 4. Border Radius -->
+  <div class="spec-section">
+    <div class="spec-section-header"><h2>Border Radius</h2><span>05</span></div>
+    <p class="spec-desc">Tech/industrial uses subtle radii. No pill-shaped buttons — keep it crisp.</p>
+    <div style="display:flex;gap:var(--space-lg)">
+      <div><div style="width:60px;height:60px;background:var(--accent-muted);border-radius:4px;margin-bottom:var(--space-sm)"></div><span class="spacing-label">--radius-sm = 4px</span></div>
+      <div><div style="width:60px;height:60px;background:var(--accent-muted);border-radius:8px;margin-bottom:var(--space-sm)"></div><span class="spacing-label">--radius-md = 8px</span></div>
+      <div><div style="width:60px;height:60px;background:var(--accent-muted);border-radius:12px;margin-bottom:var(--space-sm)"></div><span class="spacing-label">--radius-lg = 12px</span></div>
+    </div>
+  </div>
+
+  <!-- 5. Components -->
+  <div class="spec-section">
+    <div class="spec-section-header"><h2>Components</h2><span>06</span></div>
+
+    <div class="comp-group">
+      <div class="comp-group-label">Buttons</div>
+      <div class="comp-showcase">
+        <button class="btn btn-primary">Add to Cart</button>
+        <button class="btn">Secondary</button>
+        <button class="btn btn-ghost">Ghost</button>
+        <button class="btn btn-sm btn-primary">Small</button>
+        <button class="btn btn-lg btn-primary">Large CTA</button>
+        <a href="#" class="btn btn-primary">Link as Button</a>
+      </div>
+      <div style="margin-top:var(--space-sm);display:flex;gap:var(--space-sm)">
+        <button class="btn" disabled>Disabled</button>
+        <button class="btn btn-primary" disabled>Disabled</button>
+      </div>
+    </div>
+
+    <div class="comp-group">
+      <div class="comp-group-label">Input Fields</div>
+      <div style="max-width:400px">
+        <label for="demo-email">Email address</label>
+        <input type="email" id="demo-email" class="input" placeholder="you@company.com">
+      </div>
+      <div style="max-width:400px;margin-top:var(--space-md)">
+        <label for="demo-select">Drone model</label>
+        <select id="demo-select" class="input">
+          <option>Surveyor X8</option>
+          <option>AgriScan Pro</option>
+          <option>Sentinel R22</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="comp-group">
+      <div class="comp-group-label">Badges & Status</div>
+      <div class="comp-showcase">
+        <span class="badge">In progress</span>
+        <span class="badge badge-success">Active</span>
+        <span class="badge badge-warning">Pending</span>
+        <span class="badge badge-danger">Offline</span>
+        <span class="badge badge-neutral">Draft</span>
+      </div>
+      <div class="comp-showcase" style="margin-top:var(--space-md)">
+        <span style="display:flex;align-items:center;gap:var(--space-xs);font-size:0.8rem"><span class="status-dot active"></span> Online</span>
+        <span style="display:flex;align-items:center;gap:var(--space-xs);font-size:0.8rem"><span class="status-dot"></span> Offline</span>
+        <span style="display:flex;align-items:center;gap:var(--space-xs);font-size:0.8rem"><span class="status-dot warning"></span> Standby</span>
+      </div>
+    </div>
+
+    <div class="comp-group">
+      <div class="comp-group-label">Cards</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-md);max-width:900px">
+        <div class="card">
+          <div style="width:100%;height:100px;background:var(--code-bg);border-radius:var(--radius-sm);margin-bottom:var(--space-md)"></div>
+          <div style="font-size:0.9rem;font-weight:600;margin-bottom:var(--space-xs)">Default Card</div>
+          <div style="font-size:0.75rem;color:var(--muted)">No hover effect</div>
+        </div>
+        <div class="card card-hover">
+          <div style="width:100%;height:100px;background:var(--accent-muted);border-radius:var(--radius-sm);margin-bottom:var(--space-md)"></div>
+          <div style="font-size:0.9rem;font-weight:600;margin-bottom:var(--space-xs)">Hover Card</div>
+          <div style="font-size:0.75rem;color:var(--muted)">Hover me for shadow</div>
+        </div>
+        <div class="card card-interactive">
+          <div style="width:100%;height:100px;background:var(--success);opacity:0.3;border-radius:var(--radius-sm);margin-bottom:var(--space-md)"></div>
+          <div style="font-size:0.9rem;font-weight:600;margin-bottom:var(--space-xs)">Interactive Card</div>
+          <div style="font-size:0.75rem;color:var(--muted)">Clickable, elevated hover</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-group">
+      <div class="comp-group-label">Tables</div>
+      <table class="data-table" style="max-width:700px">
+        <thead><tr><th>Model</th><th>Flight Time</th><th>Range</th><th>Payload</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Surveyor X8</td><td>42 min</td><td>15 km</td><td>2.5 kg</td><td><span class="badge badge-success">Active</span></td></tr>
+          <tr><td>AgriScan Pro</td><td>55 min</td><td>22 km</td><td>3.2 kg</td><td><span class="badge badge-success">Active</span></td></tr>
+          <tr><td>Sentinel R22</td><td>35 min</td><td>10 km</td><td>1.8 kg</td><td><span class="badge badge-warning">Pending</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="comp-group">
+      <div class="comp-group-label">Navigation</div>
+      <div style="border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-md) var(--space-lg);background:var(--surface);border-bottom:1px solid var(--border)">
+          <span style="font-weight:700;letter-spacing:-0.02em;font-size:1.1rem">DRØ<span style="color:var(--accent)">NE</span></span>
+          <div style="display:flex;gap:var(--space-lg);font-size:0.8rem;color:var(--fg-secondary)">
+            <span style="color:var(--fg)">Store</span>
+            <span>Build</span>
+            <span>Support</span>
+            <span>Login</span>
+          </div>
+        </div>
+        <div style="padding:var(--space-lg)">
+          <div style="display:flex;gap:var(--space-md);flex-wrap:wrap">
+            <span class="badge badge-neutral">Sticky frosted nav</span>
+            <span class="badge badge-neutral">Backdrop-filter: blur(12px)</span>
+            <span class="badge badge-neutral">Responsive hamburger ≤768px</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-group">
+      <div class="comp-group-label">Price Display</div>
+      <div style="display:flex;gap:var(--space-xl);align-items:baseline;flex-wrap:wrap">
+        <div><div class="price price-micro">From</div><div class="price price-large">$1,249</div></div>
+        <div><div class="price price-micro">Subtotal</div><div class="price price-medium">$576</div></div>
+        <div><div class="price price-micro">Tax</div><div class="price price-small">$46.08</div></div>
+        <div><span class="price price-micro" style="margin-right:var(--space-sm)">Total:</span><span class="price price-large" style="color:var(--accent)">$622.08</span></div>
+      </div>
+    </div>
+
+    <div class="comp-group">
+      <div class="comp-group-label">Status Pills (data context)</div>
+      <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;font-size:0.8rem;font-family:var(--font-mono)">
+        <span style="display:flex;align-items:center;gap:var(--space-xs)"><span class="status-dot active"></span> 12,450 RPM</span>
+        <span style="display:flex;align-items:center;gap:var(--space-xs)"><span class="status-dot active"></span> 22.4V</span>
+        <span style="display:flex;align-items:center;gap:var(--space-xs)"><span class="status-dot warning"></span> 58% battery</span>
+        <span style="display:flex;align-items:center;gap:var(--space-xs)"><span class="status-dot"></span> GPS: 8 sats</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Breakpoints -->
+  <div class="spec-section">
+    <div class="spec-section-header"><h2>Responsive Breakpoints</h2><span>07</span></div>
+    <p class="spec-desc">Fluid scale with <code style="font-family:var(--font-mono);font-size:0.8rem;background:var(--code-bg);padding:0 4px;border-radius:2px">clamp()</code> for type. Nine tiers covering 2025–2026 devices. Verify no horizontal scroll at each.</p>
+    <div class="bp-grid">
+      <div class="bp-card"><div class="bp-name">Mobile Compact</div><div class="bp-width">360px</div><div class="bp-desc">Foldables, small phones</div></div>
+      <div class="bp-card"><div class="bp-name">Mobile Standard</div><div class="bp-width">390–430px</div><div class="bp-desc">iPhone 15 Pro, Pixel 8</div></div>
+      <div class="bp-card"><div class="bp-name">Foldable / Small Tablet</div><div class="bp-width">600–744px</div><div class="bp-desc">Galaxy Fold, iPad Mini</div></div>
+      <div class="bp-card"><div class="bp-name">Tablet Portrait</div><div class="bp-width">768–834px</div><div class="bp-desc">iPad, Galaxy Tab</div></div>
+      <div class="bp-card"><div class="bp-name">Tablet Landscape</div><div class="bp-width">1024–1180px</div><div class="bp-desc">iPad Pro landscape</div></div>
+      <div class="bp-card"><div class="bp-name">Laptop</div><div class="bp-width">1280–1366px</div><div class="bp-desc">MacBook Air, ThinkPad</div></div>
+      <div class="bp-card"><div class="bp-name">Desktop</div><div class="bp-width">1440–1536px</div><div class="bp-desc">27" monitors, MacBook Pro</div></div>
+      <div class="bp-card"><div class="bp-name">Wide</div><div class="bp-width">1920px</div><div class="bp-desc">32"+, ultrawide</div></div>
+    </div>
+  </div>
+
+  <!-- 7. Figma mapping -->
+  <div class="spec-section">
+    <div class="spec-section-header"><h2>Figma Variable Mapping</h2><span>08</span></div>
+    <p class="spec-desc">
+      Create Figma variables with these names in the "DRØNE" collection. Use "Dark" and "Light" modes.
+      CSS variable names double as Figma variable names — no translation layer needed.
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-lg)">
+      <div>
+        <h3 style="font-family:var(--font-mono);font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:var(--space-md)">Primitives</h3>
+        <table class="token-table">
+          <thead><tr><th>Figma Variable</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>color/blue-500</td><td>Color</td></tr>
+            <tr><td>color/green-500</td><td>Color</td></tr>
+            <tr><td>color/red-500</td><td>Color</td></tr>
+            <tr><td>color/amber-500</td><td>Color</td></tr>
+            <tr><td>color/neutral-50</td><td>Color</td></tr>
+            <tr><td>color/neutral-100</td><td>Color</td></tr>
+            <tr><td>color/neutral-900</td><td>Color</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 style="font-family:var(--font-mono);font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:var(--space-md)">Semantic Tokens (Dark/Light)</h3>
+        <table class="token-table">
+          <thead><tr><th>Figma Variable</th><th>Alias → Dark</th><th>Alias → Light</th></tr></thead>
+          <tbody>
+            <tr><td>bg</td><td>neutral-900</td><td>neutral-50</td></tr>
+            <tr><td>surface</td><td>neutral-800</td><td>white</td></tr>
+            <tr><td>fg</td><td>neutral-50</td><td>neutral-900</td></tr>
+            <tr><td>accent</td><td>blue-500</td><td>blue-500</td></tr>
+            <tr><td>success</td><td>green-500</td><td>green-500</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Usage -->
+  <div class="spec-section">
+    <div class="spec-section-header"><h2>Usage</h2><span>09</span></div>
+    <p class="spec-desc">
+      Link <code style="font-family:var(--font-mono);font-size:0.8rem;background:var(--code-bg);padding:0 4px;border-radius:2px">system.css</code> in every HTML page and toggle themes with <code style="font-family:var(--font-mono);font-size:0.8rem;background:var(--code-bg);padding:0 4px;border-radius:2px">document.documentElement.setAttribute('data-theme', 'light')</code>.
+    </p>
+    <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--space-lg);font-family:var(--font-mono);font-size:0.8rem;line-height:1.8">
+      &lt;link rel="stylesheet" href="system.css"&gt;<br>
+      &lt;html data-theme="dark"&gt;<br><br>
+      // Toggle<br>
+      document.documentElement.setAttribute('data-theme', 'light');
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleTheme(){
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') !== 'light';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '[light]' : '[dark]';
+  localStorage.setItem('drone-theme', isDark ? 'light' : 'dark');
+}
+const saved = localStorage.getItem('drone-theme');
+if(saved){document.documentElement.setAttribute('data-theme', saved);document.getElementById('themeBtn').textContent = '['+saved+']'}
+</script>
+</body>
+</html>

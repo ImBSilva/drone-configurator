@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DRØNE — Drones Enterprise para Missões Críticas</title>
+<link rel="stylesheet" href="system.css">
+<style>
+.hero-split{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:85vh;
+}
+.hero-content{
+  padding:var(--space-2xl) var(--space-lg);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.hero-content .tag{
+  font-family:var(--font-mono);
+  font-size:0.65rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--accent);
+  margin-bottom:var(--space-md);
+}
+.hero-content h1{
+  font-family:var(--font-display);
+  font-size:clamp(2.2rem,5.5vw,4.5rem);
+  font-weight:800;
+  letter-spacing:-0.03em;
+  line-height:0.9;
+}
+.hero-content h1 em{font-style:normal;color:var(--accent)}
+.hero-content .sub{
+  font-size:clamp(0.85rem,1.1vw,1rem);
+  color:var(--fg-secondary);
+  line-height:1.7;
+  max-width:48ch;
+  margin-top:var(--space-lg);
+}
+.hero-visual{
+  background:var(--surface);
+  border-left:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero-visual-inner{
+  text-align:center;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--muted);
+  line-height:1.8;
+}
+.hero-visual-decor{
+  position:absolute;
+  width:clamp(200px,40vw,500px);
+  aspect-ratio:1;
+  border:1px solid var(--border);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+}
+.hero-visual-decor:nth-child(2){width:clamp(150px,30vw,380px);border-color:var(--accent-muted)}
+.hero-visual-decor:nth-child(3){width:clamp(100px,20vw,260px);border-color:var(--accent);opacity:0.4}
+.hero-ctas{display:flex;gap:var(--space-md);margin-top:var(--space-lg);flex-wrap:wrap}
+
+.vantagens{
+  padding:var(--space-xl) var(--space-lg);
+  max-width:1200px;margin:0 auto;
+}
+.section-label{
+  font-family:var(--font-mono);
+  font-size:0.65rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--accent);
+  margin-bottom:var(--space-sm);
+}
+.vant-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-lg);margin-top:var(--space-lg)}
+.vant-card{border:1px solid var(--border);padding:var(--space-lg)}
+.vant-card .icon{font-size:1.2rem;margin-bottom:var(--space-md);color:var(--accent);font-family:var(--font-mono)}
+.vant-card h3{font-size:0.9rem;font-weight:600;margin-bottom:var(--space-sm)}
+.vant-card p{font-size:0.75rem;color:var(--fg-secondary);line-height:1.6}
+
+.casos-uso{
+  padding:var(--space-xl) var(--space-lg);
+  max-width:1200px;margin:0 auto;
+  border-top:1px solid var(--border);
+}
+.uso-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-lg);margin-top:var(--space-lg)}
+.uso-card{border:1px solid var(--border);padding:var(--space-lg)}
+.uso-card .code{
+  font-family:var(--font-mono);font-size:0.6rem;color:var(--accent);margin-bottom:var(--space-sm);
+  text-transform:uppercase;letter-spacing:0.08em;
+}
+.uso-card h3{font-size:1rem;font-weight:600;margin-bottom:var(--space-sm)}
+.uso-card p{font-size:0.75rem;color:var(--fg-secondary);line-height:1.6}
+
+.specs-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.spec-item{padding:var(--space-lg);border-right:1px solid var(--border);text-align:center}
+.spec-item:last-child{border-right:none}
+.spec-item .val{font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.spec-item .lbl{font-size:0.7rem;color:var(--muted);margin-top:var(--space-xs);font-family:var(--font-mono)}
+
+.cta-section{
+  padding:var(--space-2xl) var(--space-lg);
+  text-align:center;
+}
+.cta-section h2{
+  font-family:var(--font-display);
+  font-size:clamp(1.5rem,3.5vw,2.8rem);
+  font-weight:700;
+  letter-spacing:-0.02em;
+  max-width:20ch;margin:0 auto;
+}
+.cta-section p{color:var(--fg-secondary);margin-top:var(--space-md);font-size:0.85rem}
+.cta-section .btn{margin-top:var(--space-lg)}
+
+@media(max-width:768px){
+  .hero-split{grid-template-columns:1fr}
+  .hero-visual{display:none}
+  .vant-grid{grid-template-columns:1fr 1fr}
+  .uso-grid{grid-template-columns:1fr}
+  .specs-strip{grid-template-columns:repeat(2,1fr)}
+  .spec-item:nth-child(2){border-right:none}
+}
+@media(max-width:430px){
+  .hero-content{padding:var(--space-xl) var(--space-md)}
+  .vantagens{padding:var(--space-lg) var(--space-md)}
+  .vant-grid{grid-template-columns:1fr}
+  .casos-uso{padding:var(--space-lg) var(--space-md)}
+  .specs-strip{grid-template-columns:1fr}
+  .spec-item{border-right:none;border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">DRØ<span style="color:var(--accent)">NE</span></a>
+  <ul class="nav-links">
+    <li><a href="landing.html" class="active">Início</a></li>
+    <li><a href="catalog.html">Catálogo</a></li>
+    <li><a href="configurator.html">Configurador</a></li>
+    <li><a href="dashboard.html">Minha Frota</a></li>
+    <li><a href="login.html">Entrar</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:var(--space-md)">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">[dark]</button>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">Menu</button>
+  </div>
+</nav>
+
+<div class="hero-split">
+  <div class="hero-content">
+    <div class="tag">DRØNE Systems</div>
+    <h1>Construído para<br><em>Missões</em> que<br>Exigem <em>Precisão</em></h1>
+    <p class="sub">Drones modulares enterprise para vigilância patrimonial, agricultura de precisão, mapeamento geoespacial e operações governamentais. Cada componente é intercambiável, cada configuração é pronta para missão.</p>
+    <div class="hero-ctas">
+      <a href="configurator.html" class="btn btn-primary btn-lg">Começar a Configurar</a>
+      <a href="catalog.html" class="btn btn-lg">Ver Modelos</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-visual-decor"></div>
+    <div class="hero-visual-decor"></div>
+    <div class="hero-visual-decor"></div>
+    <div class="hero-visual-inner">
+      <div style="font-size:clamp(1.5rem,3vw,2.5rem);font-weight:700;color:var(--fg)">3D</div>
+      <div style="margin-top:var(--space-sm)">Pré-visualização do drone</div>
+      <div style="margin-top:var(--space-xs)">Three.js · Rotacionar · Zoom</div>
+      <div style="display:flex;gap:var(--space-md);margin-top:var(--space-lg)">
+        <span class="badge badge-neutral">Estrutura</span>
+        <span class="badge badge-neutral">Missão</span>
+        <span class="badge badge-neutral">Propulsão</span>
+        <span class="badge badge-neutral">Cores</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="vantagens">
+  <span class="section-label">Por que DRØNE</span>
+  <div class="vant-grid">
+    <div class="vant-card">
+      <div class="icon">01</div>
+      <h3>Simulação em Tempo Real</h3>
+      <p>Peso, autonomia e custo atualizam instantaneamente conforme você troca cada componente.</p>
+    </div>
+    <div class="vant-card">
+      <div class="icon">02</div>
+      <h3>Peças 100% Intercambiáveis</h3>
+      <p>Estrutura, motor, bateria, câmera e hélices — todas compatíveis entre si na plataforma modular.</p>
+    </div>
+    <div class="vant-card">
+      <div class="icon">03</div>
+      <h3>Exportação de Specs Técnicas</h3>
+      <p>Gere PDF com a ficha técnica completa da sua configuração para aprovação ou licitação.</p>
+    </div>
+    <div class="vant-card">
+      <div class="icon">04</div>
+      <h3>Gestão de Frota</h3>
+      <p>Salve múltiplas configurações, duplique projetos e gerencie sua frota de um só lugar.</p>
+    </div>
+  </div>
+</div>
+
+<div class="casos-uso">
+  <span class="section-label">Casos de Uso</span>
+  <div class="uso-grid">
+    <div class="uso-card">
+      <div class="code">// vigilância</div>
+      <h3>Segurança Patrimonial</h3>
+      <p>Patrulhamento de perímetro, monitoramento de eventos e rastreamento de ativos com câmera térmica e transmissão de vídeo em tempo real. Até 55 minutos de voo contínuo.</p>
+    </div>
+    <div class="uso-card">
+      <div class="code">// agricultura</div>
+      <h3>Agricultura de Precisão</h3>
+      <p>Análise multiespectral de culturas, mapeamento de campos e pulverização automatizada. Sensores NDVI identificam zonas de estresse antes que sejam visíveis a olho nu.</p>
+    </div>
+    <div class="uso-card">
+      <div class="code">// geoespacial</div>
+      <h3>Mapeamento Geoespacial</h3>
+      <p>Payloads LiDAR e fotogrametria para mapeamento topográfico, monitoramento de obras e inspeção de infraestrutura com resolução de 2 cm.</p>
+    </div>
+  </div>
+</div>
+
+<div class="specs-strip">
+  <div class="spec-item"><div class="val">55</div><div class="lbl">Autonomia (min)</div></div>
+  <div class="spec-item"><div class="val">22</div><div class="lbl">Alcance (km)</div></div>
+  <div class="spec-item"><div class="val">3.2</div><div class="lbl">Carga Máxima (kg)</div></div>
+  <div class="spec-item"><div class="val">99.7</div><div class="lbl">Disponibilidade (%)</div></div>
+</div>
+
+<div class="cta-section">
+  <h2>Pronto para configurar seu drone?</h2>
+  <p>Monte sua primeira aeronave em menos de 2 minutos. Sem compromisso — salve e compartilhe seu projeto.</p>
+  <a href="configurator.html" class="btn btn-primary btn-lg">Começar Agora</a>
+</div>
+
+<script>
+function toggleTheme(){
+  const h = document.documentElement;
+  const d = h.getAttribute('data-theme') !== 'light';
+  h.setAttribute('data-theme', d ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = d ? '[light]' : '[dark]';
+  localStorage.setItem('drone-theme', d ? 'light' : 'dark');
+}
+const s = localStorage.getItem('drone-theme');
+if(s){document.documentElement.setAttribute('data-theme', s);document.getElementById('themeBtn').textContent = '['+s+']'}
+</script>
+</body>
+</html>

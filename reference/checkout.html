@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DRØNE — Checkout</title>
+<link rel="stylesheet" href="system.css">
+<style>
+.checkout-layout{
+  display:grid;
+  grid-template-columns:1.5fr 1fr;
+  gap:var(--space-xl);
+  padding:var(--space-xl) var(--space-lg);
+  max-width:1200px;
+  margin:0 auto;
+  min-height:calc(100vh - 49px);
+}
+.page-header{padding:var(--space-xl) var(--space-lg) 0;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--border)}
+.page-header h1{font-size:clamp(1.3rem,2.5vw,1.8rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:var(--space-xs)}
+.page-header p{font-size:0.8rem;color:var(--fg-secondary)}
+
+.checkout-section{margin-bottom:var(--space-xl)}
+.checkout-section h3{
+  font-family:var(--font-mono);
+  font-size:0.65rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--accent);
+  margin-bottom:var(--space-md);
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);margin-bottom:var(--space-md)}
+.form-group{margin-bottom:var(--space-md)}
+.form-group label{display:block;margin-bottom:var(--space-xs);font-size:0.75rem;font-weight:500;color:var(--fg-secondary)}
+.form-group .input{width:100%}
+.form-group.full{grid-column:1/-1}
+.method-select{display:flex;gap:var(--space-sm);flex-wrap:wrap}
+.method-card{
+  flex:1;min-width:120px;
+  padding:var(--space-md);
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:var(--transition);
+  text-align:center;
+}
+.method-card:hover{border-color:var(--accent-muted)}
+.method-card.selected{border-color:var(--accent)}
+.method-card .name{font-size:0.8rem;font-weight:500}
+.method-card .desc{font-size:0.65rem;color:var(--fg-secondary);margin-top:2px}
+.method-card .rate{font-family:var(--font-mono);font-size:0.7rem;color:var(--accent);margin-top:var(--space-xs)}
+
+.order-review{
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:var(--space-lg);
+  height:fit-content;
+  position:sticky;top:65px;
+}
+.order-review h3{font-size:1rem;font-weight:600;margin-bottom:var(--space-md);padding-bottom:var(--space-md);border-bottom:1px solid var(--border)}
+.review-item{
+  display:flex;justify-content:space-between;margin-bottom:var(--space-md);
+  padding-bottom:var(--space-md);border-bottom:1px solid var(--border);
+}
+.review-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.review-item .r-name{font-size:0.8rem;font-weight:500}
+.review-item .r-qty{font-size:0.65rem;color:var(--muted);font-family:var(--font-mono)}
+.review-item .r-price{font-family:var(--font-mono);font-size:0.8rem}
+
+.login-prompt{
+  border:1px solid var(--border);
+  padding:var(--space-md);
+  margin-bottom:var(--space-lg);
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:var(--space-md);
+}
+.login-prompt p{font-size:0.8rem;color:var(--fg-secondary)}
+.login-prompt p strong{color:var(--fg)}
+
+@media(max-width:768px){
+  .checkout-layout{grid-template-columns:1fr;padding:var(--space-lg) var(--space-md)}
+  .form-row{grid-template-columns:1fr}
+  .page-header{padding:var(--space-lg) var(--space-md) 0}
+  .login-prompt{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">DRØ<span style="color:var(--accent)">NE</span></a>
+  <ul class="nav-links">
+    <li><a href="landing.html">Início</a></li>
+    <li><a href="catalog.html">Catálogo</a></li>
+    <li><a href="configurator.html">Configurador</a></li>
+    <li><a href="dashboard.html">Minha Frota</a></li>
+    <li><a href="login.html">Entrar</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:var(--space-md)">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">[dark]</button>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">Menu</button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Checkout</h1>
+  <p>Revise seu pedido e finalize a compra</p>
+</div>
+
+<div class="checkout-layout">
+  <div>
+    <div class="login-prompt">
+      <div>
+        <p><strong>Login necessário</strong> para finalizar a compra</p>
+        <p style="font-size:0.7rem;margin-top:2px">Salve seus projetos, acompanhe pedidos e gerencie sua frota.</p>
+      </div>
+      <a href="login.html" class="btn btn-primary btn-sm">Fazer Login</a>
+    </div>
+
+    <div class="checkout-section">
+      <h3>Endereço de Entrega</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Nome</label><input type="text" class="input" placeholder="Nome completo"></div>
+        <div class="form-group"><label>Organização</label><input type="text" class="input" placeholder="Empresa ou órgão (opcional)"></div>
+      </div>
+      <div class="form-group"><label>Endereço</label><input type="text" class="input" placeholder="Rua, número, complemento"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Cidade</label><input type="text" class="input" placeholder="Cidade"></div>
+        <div class="form-group"><label>CEP</label><input type="text" class="input" placeholder="CEP"></div>
+      </div>
+      <div class="form-group"><label>País</label>
+        <select class="input">
+          <option>Brasil</option>
+          <option>Estados Unidos</option>
+          <option>Canadá</option>
+          <option>Reino Unido</option>
+          <option>Outro</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="checkout-section">
+      <h3>Forma de Entrega</h3>
+      <div class="method-select">
+        <div class="method-card selected" onclick="selectMethod(this)">
+          <div class="name">Padrão</div>
+          <div class="desc">5–8 dias úteis</div>
+          <div class="rate">Grátis</div>
+        </div>
+        <div class="method-card" onclick="selectMethod(this)">
+          <div class="name">Expresso</div>
+          <div class="desc">2–3 dias úteis</div>
+          <div class="rate">$89</div>
+        </div>
+        <div class="method-card" onclick="selectMethod(this)">
+          <div class="name">VIP</div>
+          <div class="desc">Próximo dia útil</div>
+          <div class="rate">$149</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="checkout-section">
+      <h3>Pagamento</h3>
+      <div class="form-group"><label>Número do cartão</label><input type="text" class="input" placeholder="0000 0000 0000 0000" inputmode="numeric"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Validade</label><input type="text" class="input" placeholder="MM / AA"></div>
+        <div class="form-group"><label>CVC</label><input type="text" class="input" placeholder="CVC"></div>
+      </div>
+      <div class="form-group"><label>Email para fatura</label><input type="email" class="input" placeholder="fatura@empresa.com"></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="order-review">
+      <h3>Revisão do Pedido</h3>
+      <div class="review-item">
+        <div><div class="r-name">Surveyor X8</div><span class="r-qty">Qtd: 1</span></div>
+        <div class="r-price">$2,449</div>
+      </div>
+      <div class="review-item">
+        <div><div class="r-name">Custom Build — Vigilante X8</div><span class="r-qty">Qtd: 1 · 5 peças</span></div>
+        <div class="r-price">$576</div>
+      </div>
+      <hr style="margin:var(--space-md) 0">
+      <div class="summary-row" style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:var(--space-xs)">
+        <span style="color:var(--fg-secondary)">Subtotal</span>
+        <span style="font-family:var(--font-mono)">$3,025</span>
+      </div>
+      <div class="summary-row" style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:var(--space-xs)">
+        <span style="color:var(--fg-secondary)">Frete</span>
+        <span style="font-family:var(--font-mono)">Grátis</span>
+      </div>
+      <div class="summary-row" style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:var(--space-xs)">
+        <span style="color:var(--fg-secondary)">Impostos (8%)</span>
+        <span style="font-family:var(--font-mono)">$242</span>
+      </div>
+      <hr style="margin:var(--space-md) 0">
+      <div style="display:flex;justify-content:space-between;font-size:1.2rem;font-weight:700">
+        <span>Total</span>
+        <span style="color:var(--accent);font-family:var(--font-mono)">$3,267</span>
+      </div>
+      <button class="btn btn-primary btn-lg" onclick="placeOrder()" style="width:100%;margin-top:var(--space-lg);justify-content:center">
+        Finalizar Pedido
+      </button>
+      <p style="font-size:0.65rem;color:var(--muted);text-align:center;margin-top:var(--space-sm)">
+        Ao finalizar, você concorda com nossos Termos de Serviço
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+function selectMethod(el){
+  document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function placeOrder(){
+  alert('Pedido realizado com sucesso! (Demonstração)\n\nEm produção:\n1. Validar sessão do usuário\n2. Processar pagamento\n3. Enviar confirmação\n4. Redirecionar para acompanhamento');
+}
+
+function toggleTheme(){
+  const h = document.documentElement;
+  const d = h.getAttribute('data-theme') !== 'light';
+  h.setAttribute('data-theme', d ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = d ? '[light]' : '[dark]';
+  localStorage.setItem('drone-theme', d ? 'light' : 'dark');
+}
+const s = localStorage.getItem('drone-theme');
+if(s){document.documentElement.setAttribute('data-theme', s);document.getElementById('themeBtn').textContent = '['+s+']'}
+</script>
+</body>
+</html>
