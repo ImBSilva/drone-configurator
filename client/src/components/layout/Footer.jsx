@@ -1,4 +1,4 @@
-import { Shield, Cpu, Layers, BookOpen, GitBranch } from 'lucide-react'
+import { Shield, Cpu, Layers, BookOpen } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -12,7 +12,7 @@ export function Footer() {
               <Cpu size={14} /> DRØNE ENGINE Beta 0.5
             </h3>
             <p className="text-xs text-industrial-fg-secondary leading-relaxed max-w-sm">
-              Plataforma de modelagem 3D e parametrização industrial de drones corporativos de alta performance. Desenvolvido para operações governamentais, mapeamento LiDAR e inteligência aérea avançada.
+              Configurador de drones modulares com visualização 3D em tempo real, catálogo de peças, gestão de frotas e planos de assinatura.
             </p>
           </div>
 
@@ -43,17 +43,6 @@ export function Footer() {
             <h3 className="font-mono text-xs font-semibold tracking-wider text-industrial-fg uppercase mb-3 flex items-center gap-1.5">
               <BookOpen size={14} /> PROJETO DE ESTUDOS
             </h3>
-            <p className="text-xs text-industrial-fg-secondary leading-relaxed mb-3">
-              Aplicação de portfólio para demonstração de arquitetura full-stack, computação gráfica 3D, segurança de API e design UI/UX.
-            </p>
-            <a
-              href="https://github.com/ImBSilva/drone-configurator"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-industrial-accent hover:text-industrial-accent-hover transition-colors font-mono mb-3"
-            >
-              <GitBranch size={14} /> github.com/ImBSilva/drone-configurator
-            </a>
             <div className="flex flex-wrap gap-1.5">
               {['React', 'Fastify', 'MongoDB', 'Three.js', 'Tailwind'].map((tech) => (
                 <span key={tech} className="px-1.5 py-0.5 rounded-sm bg-industrial-border/30 border border-industrial-border/50 text-[9px] font-mono text-industrial-muted uppercase tracking-wider">

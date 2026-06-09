@@ -199,13 +199,9 @@ export function LandingPage() {
       {/* About Section */}
       <section className="border-t border-industrial-border bg-zinc-950/10 py-12 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="font-mono text-[10px] text-industrial-accent tracking-widest uppercase mb-2">
+          <div className="font-mono text-[10px] text-industrial-accent tracking-widest uppercase mb-4">
             FULL-STACK & UI/UX · PROJETO DE ESTUDOS
           </div>
-          <p className="text-sm text-industrial-fg-secondary max-w-2xl mx-auto mb-5 leading-relaxed">
-            Portfólio demonstrando arquitetura full-stack com React Three Fiber, Fastify, MongoDB e JWT,
-            combinado a um design system industrial criado no Figma com foco em UI/UX.
-          </p>
           <a
             href="https://github.com/ImBSilva/drone-configurator"
             target="_blank"
