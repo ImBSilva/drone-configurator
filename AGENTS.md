@@ -5,12 +5,12 @@
 ```
 client/       # React 19 + Vite 8 + Tailwind 4 + R3F (JSX, not TSX)
 server/       # Fastify 5 + Mongoose 8 (ESM, "type": "module")
-reference/   # Static HTML/CSS prototype — NOT part of the app; do not edit
+reference/   # Design system (Figma → HTML/CSS spec) — NOT part of the app; do not edit
 docker-compose.yml  # MongoDB 7 + server
 ```
 
-No git repo initialized. No test framework or test files exist.
-Only `client/` has a `.gitignore` — root and `server/` lack one.
+No test framework or test files exist.
+Only `client/` has a `.gitignore` — root and `server/` have theirs.
 
 ## Commands
 
