@@ -102,6 +102,14 @@ npm install
 npm run dev
 ```
 
+## CI/CD
+
+O projeto usa **GitHub Actions** para integração contínua. O workflow está em `.github/workflows/ci.yml` e roda automaticamente em todo `push` ou `pull_request` para a branch `main`.
+
+**Jobs:**
+- **client** — `npm ci` → `npm run lint` → `npm run build`
+- **server** — `npm ci` (verifica instalação das dependências)
+
 ## Próximos passos
 
 - Integração ArcGIS — mapas e geolocalização para missões

@@ -3,10 +3,11 @@
 ## Repo structure
 
 ```
-client/       # React 19 + Vite 8 + Tailwind 4 + R3F (JSX, not TSX)
-server/       # Fastify 5 + Mongoose 8 (ESM, "type": "module")
-reference/   # Design system (Figma → HTML/CSS spec) — NOT part of the app; do not edit
-docker-compose.yml  # MongoDB 7 + server
+client/        # React 19 + Vite 8 + Tailwind 4 + R3F (JSX, not TSX)
+server/        # Fastify 5 + Mongoose 8 (ESM, "type": "module")
+reference/     # Design system (Figma → HTML/CSS spec) — NOT part of the app; do not edit
+.github/workflows/ci.yml  # GitHub Actions CI pipeline
+docker-compose.yml        # MongoDB 7 + server
 ```
 
 No test framework or test files exist.

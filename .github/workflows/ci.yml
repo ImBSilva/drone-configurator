@@ -9,10 +9,10 @@ on:
 jobs:
   client:
     runs-on: ubuntu-latest
-    defaults: 
+    defaults:
       run:
-        working-directory: client    
-      steps:
+        working-directory: client
+    steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -23,10 +23,10 @@ jobs:
 
   server:
     runs-on: ubuntu-latest
-    defaults: 
+    defaults:
       run:
-        working-directory: server    
-      steps:
+        working-directory: server
+    steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
