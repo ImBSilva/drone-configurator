@@ -1,4 +1,4 @@
-import { Shield, Cpu, Layers, BookOpen, Github } from 'lucide-react'
+import { Shield, Cpu, Layers, BookOpen, GitBranch } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -52,7 +52,7 @@ export function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs text-industrial-accent hover:text-industrial-accent-hover transition-colors font-mono mb-3"
             >
-              <Github size={14} /> github.com/ImBSilva/drone-configurator
+              <GitBranch size={14} /> github.com/ImBSilva/drone-configurator
             </a>
             <div className="flex flex-wrap gap-1.5">
               {['React', 'Fastify', 'MongoDB', 'Three.js', 'Tailwind'].map((tech) => (

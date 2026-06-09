@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom'
 import { DroneCanvas } from '../components/canvas/DroneCanvas'
 import { Button } from '../components/ui/Button'
-import { Shield, Zap, TrendingUp, MonitorSmartphone, Target, Sprout, Map, Github } from 'lucide-react'
+import { Shield, Zap, TrendingUp, MonitorSmartphone, Target, Sprout, Map, GitBranch } from 'lucide-react'
 
 export function LandingPage() {
   return (
@@ -212,7 +212,7 @@ export function LandingPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-xs text-industrial-accent hover:text-industrial-accent-hover transition-colors font-mono"
           >
-            <Github size={14} /> github.com/ImBSilva/drone-configurator
+            <GitBranch size={14} /> github.com/ImBSilva/drone-configurator
           </a>
         </div>
       </section>

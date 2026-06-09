@@ -1,5 +1,9 @@
 # Drone Configurator
 
+[![CI](https://github.com/ImBSilva/drone-configurator/actions/workflows/ci.yml/badge.svg)](https://github.com/ImBSilva/drone-configurator/actions/workflows/ci.yml)
+[![Vercel](https://img.shields.io/badge/deploy-vercel-000?logo=vercel)](https://drone-configurator-coral.vercel.app)
+[![Render](https://img.shields.io/badge/deploy-render-46E3B7?logo=render)](https://drone-api-fs40.onrender.com)
+
 Configurador industrial de drones — projeto full-stack de estudos.
 Monte drones 3D, organize frotas, gerencie assinaturas e alugue por missão.
 
@@ -116,6 +120,14 @@ O projeto usa **GitHub Actions** para integração contínua. O workflow está e
 - Fluxo de suporte — tickets, prioridades, histórico
 - Modelo de manutenção — rastrear horas de voo, peças trocadas, revisões
 - Webhooks — notificações de revisão e resposta a tickets
+
+## Deploy
+
+| Plataforma | Link |
+|------------|------|
+| **Frontend (Vercel)** | [drone-configurator-coral.vercel.app](https://drone-configurator-coral.vercel.app) |
+| **API (Render)** | [drone-api-fs40.onrender.com](https://drone-api-fs40.onrender.com) |
+| **Repositório** | [github.com/ImBSilva/drone-configurator](https://github.com/ImBSilva/drone-configurator) |
 
 ## Licença
 
