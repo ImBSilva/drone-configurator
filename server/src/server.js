@@ -13,18 +13,22 @@ dotenv.config()
 connectDB()
 
 // Initialize Fastify with structured JSON logging
-const fastify = Fastify({
-  logger: {
-    level: process.env.LOG_LEVEL || 'info',
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        translateTime: 'HH:MM:ss Z',
-        ignore: 'pid,hostname'
-      }
+const loggerConfig = {
+  level: process.env.LOG_LEVEL || 'info'
+}
+
+// Use pino-pretty apenas em desenvolvimento (local)
+if (process.env.NODE_ENV !== 'production') {
+  loggerConfig.transport = {
+    target: 'pino-pretty',
+    options: {
+      translateTime: 'HH:MM:ss Z',
+      ignore: 'pid,hostname'
     }
   }
-})
+}
+
+const fastify = Fastify({ logger: loggerConfig })
 
 // Register CORS middleware
 await fastify.register(cors, {
