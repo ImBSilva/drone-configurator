@@ -1,4 +1,4 @@
-import { Shield, Cpu, Layers, BookOpen } from 'lucide-react'
+import { Shield, Cpu, Layers } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -36,20 +36,6 @@ export function Footer() {
             <p className="text-xs text-industrial-fg-secondary leading-relaxed">
               Autenticação segura implementando sanitização contra NoSQL Injection, XSS mitigation headers, JWT signature checks, hashes criptografados e rate limits robustos.
             </p>
-          </div>
-
-          {/* Study project notice */}
-          <div>
-            <h3 className="font-mono text-xs font-semibold tracking-wider text-industrial-fg uppercase mb-3 flex items-center gap-1.5">
-              <BookOpen size={14} /> PROJETO DE ESTUDOS
-            </h3>
-            <div className="flex flex-wrap gap-1.5">
-              {['React', 'Fastify', 'MongoDB', 'Three.js', 'Tailwind'].map((tech) => (
-                <span key={tech} className="px-1.5 py-0.5 rounded-sm bg-industrial-border/30 border border-industrial-border/50 text-[9px] font-mono text-industrial-muted uppercase tracking-wider">
-                  {tech}
-                </span>
-              ))}
-            </div>
           </div>
 
         </div>
